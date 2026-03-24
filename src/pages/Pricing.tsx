@@ -57,6 +57,7 @@ const Pricing = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro" | null>(null);
   const [coupon, setCoupon] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
