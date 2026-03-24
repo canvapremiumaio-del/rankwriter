@@ -24,6 +24,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/landing" element={<Landing />} />
             <Route path="/generate" element={<Generator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/history" element={<History />} />

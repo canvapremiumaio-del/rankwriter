@@ -87,7 +87,7 @@ const Generator = () => {
 
         {article && (
           <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <BlogOutput article={article} />
+            <BlogOutput article={article} onArticleChange={setArticle} editable />
             <BlogActions article={article} isPro={isPro} />
           </div>
         )}
