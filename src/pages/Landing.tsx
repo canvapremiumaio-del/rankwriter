@@ -6,15 +6,15 @@ import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, C
 const features = [
   {
     icon: Sparkles,
-    title: "AI-Powered Writing",
-    description: "Generate complete, human-like blog articles in seconds — natural tone, no robotic phrasing.",
+    title: "Smart Blog Writing",
+    description: "Create complete, professional blog articles in seconds — natural tone, engaging style.",
     bg: "bg-[hsl(var(--accent))]",
     iconColor: "text-[hsl(var(--primary))]",
   },
   {
     icon: Search,
     title: "SEO Keywords & Meta",
-    description: "Auto-generated SEO keywords, meta descriptions, and tags to boost your Google rankings.",
+    description: "Built-in keyword research, meta descriptions, and tags to boost your Google rankings.",
     bg: "bg-violet-50",
     iconColor: "text-violet-600",
   },
@@ -27,8 +27,8 @@ const features = [
   },
   {
     icon: Wand2,
-    title: "Humanize Article",
-    description: "One-click AI rewrite to make any article sound more natural, engaging, and human-written.",
+    title: "Content Enhancer",
+    description: "One-click rewrite to make any article sound more natural, engaging, and polished.",
     bg: "bg-pink-50",
     iconColor: "text-pink-600",
   },
@@ -49,14 +49,14 @@ const features = [
   {
     icon: Zap,
     title: "Up to 2,500 Words",
-    description: "Generate longer, more detailed articles with extended word counts on the Pro plan.",
+    description: "Create longer, more detailed articles with extended word counts on the Pro plan.",
     bg: "bg-amber-50",
     iconColor: "text-amber-600",
   },
   {
     icon: Copy,
     title: "Copy & Share",
-    description: "Instantly copy your generated article to clipboard — paste anywhere, anytime.",
+    description: "Instantly copy your article to clipboard — paste anywhere, anytime.",
     bg: "bg-teal-50",
     iconColor: "text-teal-600",
   },
