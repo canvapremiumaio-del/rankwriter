@@ -29,7 +29,14 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!topic.trim()) return;
-    onGenerate(topic.trim(), tone, wordCount);
+    onGenerate(
+      topic.trim(),
+      tone,
+      wordCount,
+      isPro ? keywords.trim() : undefined,
+      isPro ? outline.trim() : undefined,
+      isPro ? instructions.trim() : undefined
+    );
   };
 
   return (
