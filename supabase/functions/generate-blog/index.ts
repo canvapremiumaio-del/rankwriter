@@ -26,10 +26,14 @@ Word count: approximately ${wordCount} words.
 Return the result using the return_blog_article function.`;
 }
 
-function getProPrompt(topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) {
-  const keywordsBlock = keywords
-    ? `\nUser-provided Keywords: ${keywords}\nUse these keywords naturally throughout the article.`
-    : `\nStep 1: Generate 5 SEO keywords related to the topic.`;
+function getProPrompt(topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) {
+  const primaryBlock = primaryKeyword
+    ? `\nPrimary Keyword: ${primaryKeyword}\n- Use the primary keyword in:\n  • Title\n  • Introduction (first paragraph)\n  • At least one H2 heading\n  • Naturally throughout the article`
+    : "";
+
+  const secondaryBlock = secondaryKeywords
+    ? `\nSecondary Keywords: ${secondaryKeywords}\n- Use secondary keywords naturally where relevant (do not force)`
+    : "";
 
   const outlineBlock = outline
     ? `\nUser-provided Outline:\n${outline}\nFollow this outline strictly. Structure the article based on these headings.`
@@ -42,7 +46,8 @@ function getProPrompt(topic: string, tone: string, wordCount: string, keywords?:
   return `You are a professional SEO strategist and expert human writer.
 
 Topic: ${topic}
-${keywordsBlock}
+${primaryBlock}
+${secondaryBlock}
 ${outlineBlock}
 ${instructionsBlock}
 
@@ -55,6 +60,7 @@ Write a high-quality, detailed article:
 - Avoid AI-like patterns and robotic phrasing
 - Use bullet points where appropriate
 - Include relatable examples and anecdotes
+- Maintain SEO optimization without keyword stuffing
 - Tone: ${tone}
 - Word count: approximately ${wordCount} words
 
@@ -79,13 +85,13 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, tone, wordCount, plan, keywords, outline, instructions } = await req.json();
+    const { topic, tone, wordCount, plan, primaryKeyword, secondaryKeywords, outline, instructions } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const isPro = plan === "pro";
     const prompt = isPro
-      ? getProPrompt(topic, tone, wordCount, keywords, outline, instructions)
+      ? getProPrompt(topic, tone, wordCount, primaryKeyword, secondaryKeywords, outline, instructions)
       : getBasicPrompt(topic, tone, wordCount);
 
     const systemMessage = isPro

@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Loader2, Crown } from "lucide-react";
 
 interface BlogInputFormProps {
-  onGenerate: (topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) => void;
+  onGenerate: (topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) => void;
   isLoading: boolean;
   isPro?: boolean;
 }
@@ -22,7 +22,8 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
-  const [keywords, setKeywords] = useState("");
+  const [primaryKeyword, setPrimaryKeyword] = useState("");
+  const [secondaryKeywords, setSecondaryKeywords] = useState("");
   const [outline, setOutline] = useState("");
   const [instructions, setInstructions] = useState("");
 
@@ -33,7 +34,8 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
       topic.trim(),
       tone,
       wordCount,
-      isPro ? keywords.trim() : undefined,
+      isPro ? primaryKeyword.trim() : undefined,
+      isPro ? secondaryKeywords.trim() : undefined,
       isPro ? outline.trim() : undefined,
       isPro ? instructions.trim() : undefined
     );
@@ -129,12 +131,23 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
           </p>
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+              Primary Keyword
             </label>
             <Input
-              placeholder="e.g. SaaS, startup, business plan, funding"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
+              placeholder="e.g. how to start a SaaS business"
+              value={primaryKeyword}
+              onChange={(e) => setPrimaryKeyword(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Secondary Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+            </label>
+            <Input
+              placeholder="e.g. SaaS startup, business plan, MVP, funding"
+              value={secondaryKeywords}
+              onChange={(e) => setSecondaryKeywords(e.target.value)}
               className="h-11"
             />
           </div>
