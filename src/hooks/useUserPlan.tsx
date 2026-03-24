@@ -7,6 +7,7 @@ export type PlanType = "basic" | "pro";
 export const useUserPlan = () => {
   const { user } = useAuth();
   const [plan, setPlan] = useState<PlanType>("basic");
+  const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +19,7 @@ export const useUserPlan = () => {
     const fetchPlan = async () => {
       const { data, error } = await supabase
         .from("user_plans")
-        .select("plan")
+        .select("plan, expires_at")
         .eq("user_id", user.id)
         .maybeSingle();
 
@@ -28,12 +29,25 @@ export const useUserPlan = () => {
       }
 
       if (data?.plan) {
-        setPlan(data.plan as PlanType);
+        // Check if plan has expired
+        const expired = data.expires_at && new Date(data.expires_at) < new Date();
+        if (expired && data.plan === "pro") {
+          // Auto-downgrade to basic
+          await supabase
+            .from("user_plans")
+            .update({ plan: "basic", expires_at: null, updated_at: new Date().toISOString() })
+            .eq("user_id", user.id);
+          setPlan("basic");
+          setExpiresAt(null);
+        } else {
+          setPlan(data.plan as PlanType);
+          setExpiresAt(data.expires_at || null);
+        }
         setLoading(false);
         return;
       }
 
-      // Self-heal missing row for older accounts
+      // Self-heal missing row
       await supabase
         .from("user_plans")
         .upsert(
@@ -64,5 +78,5 @@ export const useUserPlan = () => {
 
   const isPro = plan === "pro";
 
-  return { plan, isPro, loading, updatePlan };
+  return { plan, isPro, loading, updatePlan, expiresAt };
 };
