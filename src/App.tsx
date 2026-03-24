@@ -4,10 +4,13 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/hooks/useAuth";
-import Index from "./pages/Index.tsx";
-import Auth from "./pages/Auth.tsx";
-import History from "./pages/History.tsx";
-import NotFound from "./pages/NotFound.tsx";
+import Dashboard from "./pages/Dashboard";
+import Generator from "./pages/Generator";
+import Auth from "./pages/Auth";
+import History from "./pages/History";
+import Pricing from "./pages/Pricing";
+import ArticleDetail from "./pages/ArticleDetail";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -19,9 +22,12 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/generate" element={<Generator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/history" element={<History />} />
+            <Route path="/pricing" element={<Pricing />} />
+            <Route path="/article/:id" element={<ArticleDetail />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

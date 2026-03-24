@@ -8,17 +8,16 @@ import NavBar from "@/components/NavBar";
 import type { BlogArticle } from "@/types/blog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
-const Index = () => {
+const Generator = () => {
   const [article, setArticle] = useState<BlogArticle | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [lastTopic, setLastTopic] = useState("");
-  const [lastTone, setLastTone] = useState("");
-  const [lastWordCount, setLastWordCount] = useState("");
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
+  const { plan, isPro, loading: planLoading } = useUserPlan();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,13 +27,10 @@ const Index = () => {
   const handleGenerate = async (topic: string, tone: string, wordCount: string) => {
     setIsLoading(true);
     setArticle(null);
-    setLastTopic(topic);
-    setLastTone(tone);
-    setLastWordCount(wordCount);
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-blog", {
-        body: { topic, tone, wordCount },
+        body: { topic, tone, wordCount, plan },
       });
 
       if (error) throw error;
@@ -42,7 +38,11 @@ const Index = () => {
       const generated = data as BlogArticle;
       setArticle(generated);
 
-      // Save to history
+      toast({
+        title: "Article generated! ✨",
+        description: "Your article is ready. Scroll down to view it.",
+      });
+
       if (user) {
         const { error: saveError } = await supabase.from("articles").insert({
           user_id: user.id,
@@ -70,7 +70,7 @@ const Index = () => {
     }
   };
 
-  if (authLoading) {
+  if (authLoading || planLoading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
@@ -88,7 +88,7 @@ const Index = () => {
         {article && (
           <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <BlogOutput article={article} />
-            <BlogActions article={article} />
+            <BlogActions article={article} isPro={isPro} />
           </div>
         )}
       </div>
@@ -96,4 +96,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Generator;
