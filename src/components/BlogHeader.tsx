@@ -8,7 +8,7 @@ const BlogHeader = () => {
           <PenLine className="w-7 h-7 text-primary" />
         </div>
         <h1 className="text-3xl md:text-4xl font-bold text-foreground tracking-tight">
-          AI Blog Writer Pro
+          RankWriter
         </h1>
       </div>
       <p className="text-muted-foreground text-lg max-w-md mx-auto">

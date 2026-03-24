@@ -76,7 +76,15 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen relative overflow-hidden">
+      {/* Beautiful gradient background */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(172,50%,95%)] via-[hsl(210,40%,96%)] to-[hsl(260,40%,96%)]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[hsl(172,66%,40%/0.08)] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[hsl(260,60%,60%/0.08)] rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4" />
+        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-[hsl(200,70%,60%/0.06)] rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
+      </div>
+
       <NavBar />
       <div className="max-w-4xl mx-auto px-4 pb-20">
         {/* Hero */}
@@ -92,10 +100,10 @@ const Dashboard = () => {
             {isPro ? "⭐ Pro Plan" : "Basic Plan"}
           </Badge>
           <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
-            AI Blog Writer Pro
+            Rank<span className="text-primary">Writer</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-lg mx-auto mb-8">
-            Generate SEO-optimized articles in seconds. Write smarter, publish faster.
+            Generate SEO-optimized articles in seconds. Write smarter, rank higher.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" onClick={() => navigate("/generate")} className="gap-2 h-12 px-8 text-base font-semibold">
@@ -104,7 +112,7 @@ const Dashboard = () => {
               <ArrowRight className="w-4 h-4" />
             </Button>
             {!isPro && (
-              <Button size="lg" variant="outline" onClick={() => navigate("/pricing")} className="h-12 px-8 text-base gap-2">
+              <Button size="lg" variant="outline" onClick={() => navigate("/pricing")} className="h-12 px-8 text-base gap-2 bg-card/60 backdrop-blur-sm">
                 <Crown className="w-5 h-5" />
                 Upgrade to Pro
               </Button>
@@ -123,10 +131,10 @@ const Dashboard = () => {
               return (
                 <div
                   key={f.title}
-                  className={`rounded-2xl border p-5 relative transition-all ${
+                  className={`rounded-2xl border p-5 relative transition-all backdrop-blur-sm ${
                     locked
                       ? "bg-muted/30 border-border opacity-75"
-                      : "bg-card border-border shadow-sm hover:shadow-md"
+                      : "bg-card/70 border-border shadow-sm hover:shadow-md hover:bg-card/90"
                   }`}
                 >
                   {/* Badge */}

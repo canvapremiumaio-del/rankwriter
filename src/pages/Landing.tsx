@@ -1,22 +1,20 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Quote, Zap, Shield, Globe, CheckCircle2 } from "lucide-react";
+import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2 } from "lucide-react";
 
 const features = [
   {
     icon: Sparkles,
     title: "AI-Powered Writing",
     description: "Generate complete, SEO-optimized blog articles in seconds using advanced AI models.",
-    gradient: "from-violet-500 to-purple-600",
-    bg: "bg-violet-50",
-    iconColor: "text-violet-600",
+    bg: "bg-[hsl(var(--accent))]",
+    iconColor: "text-[hsl(var(--primary))]",
   },
   {
     icon: FileDown,
     title: "Export Anywhere",
     description: "Download your articles as polished PDF or Word documents, ready to publish.",
-    gradient: "from-sky-500 to-blue-600",
     bg: "bg-sky-50",
     iconColor: "text-sky-600",
   },
@@ -24,7 +22,6 @@ const features = [
     icon: LayoutList,
     title: "Smart Structuring",
     description: "Auto-generated outlines, meta descriptions, keywords, and proper heading hierarchy.",
-    gradient: "from-emerald-500 to-teal-600",
     bg: "bg-emerald-50",
     iconColor: "text-emerald-600",
   },
@@ -32,7 +29,6 @@ const features = [
     icon: Zap,
     title: "Lightning Fast",
     description: "Get your first draft in under 30 seconds. No more staring at blank pages.",
-    gradient: "from-amber-500 to-orange-600",
     bg: "bg-amber-50",
     iconColor: "text-amber-600",
   },
@@ -40,7 +36,6 @@ const features = [
     icon: Shield,
     title: "SEO Optimized",
     description: "Built-in keyword research, meta tags, and search engine best practices.",
-    gradient: "from-rose-500 to-pink-600",
     bg: "bg-rose-50",
     iconColor: "text-rose-600",
   },
@@ -48,7 +43,6 @@ const features = [
     icon: Globe,
     title: "Any Topic, Any Niche",
     description: "From tech to travel, finance to food — write about anything with confidence.",
-    gradient: "from-indigo-500 to-blue-600",
     bg: "bg-indigo-50",
     iconColor: "text-indigo-600",
   },
@@ -58,10 +52,10 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Content Strategist",
-    text: "AI Blog Writer Pro cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
+    text: "RankWriter cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
     rating: 5,
     avatar: "SC",
-    color: "bg-gradient-to-br from-violet-400 to-purple-500",
+    color: "bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)]",
   },
   {
     name: "Marcus Rodriguez",
@@ -97,18 +91,18 @@ const Landing = () => {
       <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-gray-900 text-lg tracking-tight">
-              AI Blog Writer <span className="text-violet-600">Pro</span>
+              Rank<span className="text-[hsl(172,66%,40%)]">Writer</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-gray-600 hover:text-gray-900">
               Sign In
             </Button>
-            <Button size="sm" onClick={() => navigate("/auth")} className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-lg shadow-violet-200 gap-1.5">
+            <Button size="sm" onClick={() => navigate("/auth")} className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] hover:from-[hsl(172,66%,35%)] hover:to-[hsl(172,66%,25%)] text-white shadow-lg shadow-[hsl(172,66%,40%/0.3)] gap-1.5">
               Get Started Free <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
@@ -117,22 +111,21 @@ const Landing = () => {
 
       {/* Hero */}
       <section className="relative overflow-hidden">
-        {/* Background decorations */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-violet-200/40 rounded-full blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-[hsl(172,50%,80%/0.4)] rounded-full blur-3xl" />
           <div className="absolute top-20 -left-40 w-80 h-80 bg-sky-200/40 rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center py-20 md:py-32">
-          <Badge className="mb-6 bg-violet-100 text-violet-700 border-violet-200 hover:bg-violet-100 text-sm font-medium px-4 py-1.5">
+          <Badge className="mb-6 bg-[hsl(172,50%,94%)] text-[hsl(172,66%,30%)] border-[hsl(172,50%,85%)] hover:bg-[hsl(172,50%,94%)] text-sm font-medium px-4 py-1.5">
             ✨ Powered by Advanced AI
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
-            Write Amazing Articles
+            Write & Rank with
             <br />
-            <span className="bg-gradient-to-r from-violet-600 via-purple-600 to-sky-500 bg-clip-text text-transparent">
-              in Seconds
+            <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] bg-clip-text text-transparent">
+              AI Precision
             </span>
           </h1>
           <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
@@ -143,7 +136,7 @@ const Landing = () => {
             <Button
               size="lg"
               onClick={() => navigate("/auth")}
-              className="bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 text-white shadow-xl shadow-violet-300/50 gap-2 h-14 px-10 text-base font-semibold rounded-xl"
+              className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] hover:from-[hsl(172,66%,35%)] hover:to-[hsl(172,66%,25%)] text-white shadow-xl shadow-[hsl(172,66%,40%/0.3)] gap-2 h-14 px-10 text-base font-semibold rounded-xl"
             >
               <Sparkles className="w-5 h-5" />
               Start Writing for Free
@@ -159,7 +152,6 @@ const Landing = () => {
             </Button>
           </div>
 
-          {/* Trust badges */}
           <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> No credit card required</span>
             <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Free plan available</span>
@@ -169,12 +161,12 @@ const Landing = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 border-y border-gray-100 bg-gradient-to-r from-violet-50/50 via-white to-sky-50/50">
+      <section className="py-16 border-y border-gray-100 bg-gradient-to-r from-[hsl(172,50%,96%)] via-white to-[hsl(200,50%,96%)]">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] bg-clip-text text-transparent">
                   {s.value}
                 </div>
                 <div className="text-sm text-gray-500 mt-1">{s.label}</div>
@@ -193,7 +185,7 @@ const Landing = () => {
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "var(--font-display)" }}>
             Everything You Need to Create
             <br />
-            <span className="bg-gradient-to-r from-sky-500 to-emerald-500 bg-clip-text text-transparent">Great Content</span>
+            <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-emerald-500 bg-clip-text text-transparent">Great Content</span>
           </h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
             Powerful tools designed to make content creation effortless and professional.
@@ -253,22 +245,22 @@ const Landing = () => {
       {/* CTA */}
       <section className="py-20 md:py-28 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-violet-600 via-purple-600 to-sky-600 rounded-3xl p-12 md:p-16 shadow-2xl shadow-violet-300/30 relative overflow-hidden">
+          <div className="bg-gradient-to-br from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] rounded-3xl p-12 md:p-16 shadow-2xl shadow-[hsl(172,66%,40%/0.3)] relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-2xl" />
               <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/10 rounded-full blur-2xl" />
             </div>
             <div className="relative">
               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-display)" }}>
-                Ready to Write Smarter?
+                Ready to Write & Rank?
               </h2>
-              <p className="text-violet-100 text-lg mb-8 max-w-lg mx-auto">
-                Join thousands of creators using AI Blog Writer Pro to produce high-quality content effortlessly.
+              <p className="text-white/80 text-lg mb-8 max-w-lg mx-auto">
+                Join thousands of creators using RankWriter to produce high-quality, SEO-optimized content effortlessly.
               </p>
               <Button
                 size="lg"
                 onClick={() => navigate("/auth")}
-                className="bg-white text-violet-700 hover:bg-gray-100 gap-2 h-14 px-10 text-base font-semibold rounded-xl shadow-xl"
+                className="bg-white text-[hsl(172,66%,30%)] hover:bg-gray-100 gap-2 h-14 px-10 text-base font-semibold rounded-xl shadow-xl"
               >
                 Get Started Free <ArrowRight className="w-4 h-4" />
               </Button>
@@ -281,12 +273,12 @@ const Landing = () => {
       <footer className="border-t border-gray-100 py-10 bg-gray-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-violet-500 to-purple-600 flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">AI Blog Writer Pro</span>
+            <span className="text-sm font-semibold text-gray-700">RankWriter</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 AI Blog Writer Pro. All rights reserved.</p>
+          <p className="text-xs text-gray-400">© 2026 RankWriter. All rights reserved.</p>
         </div>
       </footer>
     </div>
