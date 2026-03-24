@@ -22,9 +22,26 @@ export const useUserPlan = () => {
         .eq("user_id", user.id)
         .maybeSingle();
 
-      if (!error && data) {
-        setPlan(data.plan as PlanType);
+      if (error) {
+        setLoading(false);
+        return;
       }
+
+      if (data?.plan) {
+        setPlan(data.plan as PlanType);
+        setLoading(false);
+        return;
+      }
+
+      // Self-heal missing row for older accounts
+      await supabase
+        .from("user_plans")
+        .upsert(
+          { user_id: user.id, plan: "basic", updated_at: new Date().toISOString() },
+          { onConflict: "user_id" }
+        );
+
+      setPlan("basic");
       setLoading(false);
     };
 
@@ -33,10 +50,13 @@ export const useUserPlan = () => {
 
   const updatePlan = async (newPlan: PlanType) => {
     if (!user) return;
+
     const { error } = await supabase
       .from("user_plans")
-      .update({ plan: newPlan, updated_at: new Date().toISOString() })
-      .eq("user_id", user.id);
+      .upsert(
+        { user_id: user.id, plan: newPlan, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      );
 
     if (!error) setPlan(newPlan);
     return error;
