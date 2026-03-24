@@ -26,7 +26,7 @@ Word count: approximately ${wordCount} words.
 Return the result using the return_blog_article function.`;
 }
 
-function getProPrompt(topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) {
+function getProPrompt(topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string, templateInstructions?: string) {
   const primaryBlock = primaryKeyword
     ? `\nPrimary Keyword: ${primaryKeyword}\n- Use the primary keyword in:\n  • Title\n  • Introduction (first paragraph)\n  • At least one H2 heading\n  • Naturally throughout the article`
     : "";
