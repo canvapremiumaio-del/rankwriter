@@ -255,7 +255,7 @@ const Landing = () => {
                 Ready to Write & Rank?
               </h2>
               <p className="text-white/80 text-lg mb-8 max-w-lg mx-auto">
-                Join thousands of creators using RankWriter to produce high-quality, SEO-optimized content effortlessly.
+                Join thousands of creators using Rank Writer to produce high-quality, SEO-optimized content effortlessly.
               </p>
               <Button
                 size="lg"
