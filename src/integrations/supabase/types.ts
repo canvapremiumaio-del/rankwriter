@@ -59,6 +59,65 @@ export type Database = {
         }
         Relationships: []
       }
+      coupon_redemptions: {
+        Row: {
+          coupon_id: string
+          id: string
+          redeemed_at: string
+          user_id: string
+        }
+        Insert: {
+          coupon_id: string
+          id?: string
+          redeemed_at?: string
+          user_id: string
+        }
+        Update: {
+          coupon_id?: string
+          id?: string
+          redeemed_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "coupon_redemptions_coupon_id_fkey"
+            columns: ["coupon_id"]
+            isOneToOne: false
+            referencedRelation: "coupons"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      coupons: {
+        Row: {
+          code: string
+          created_at: string
+          id: string
+          is_active: boolean
+          max_uses: number
+          plan: Database["public"]["Enums"]["app_plan"]
+          used_count: number
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          plan?: Database["public"]["Enums"]["app_plan"]
+          used_count?: number
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          max_uses?: number
+          plan?: Database["public"]["Enums"]["app_plan"]
+          used_count?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
