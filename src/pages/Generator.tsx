@@ -24,13 +24,13 @@ const Generator = () => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
   }, [user, authLoading, navigate]);
 
-  const handleGenerate = async (topic: string, tone: string, wordCount: string) => {
+  const handleGenerate = async (topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) => {
     setIsLoading(true);
     setArticle(null);
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-blog", {
-        body: { topic, tone, wordCount, plan },
+        body: { topic, tone, wordCount, plan, keywords, outline, instructions },
       });
 
       if (error) throw error;

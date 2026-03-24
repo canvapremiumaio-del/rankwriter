@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Loader2, Crown } from "lucide-react";
 
 interface BlogInputFormProps {
-  onGenerate: (topic: string, tone: string, wordCount: string) => void;
+  onGenerate: (topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) => void;
   isLoading: boolean;
   isPro?: boolean;
 }
@@ -21,11 +22,21 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
+  const [keywords, setKeywords] = useState("");
+  const [outline, setOutline] = useState("");
+  const [instructions, setInstructions] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!topic.trim()) return;
-    onGenerate(topic.trim(), tone, wordCount);
+    onGenerate(
+      topic.trim(),
+      tone,
+      wordCount,
+      isPro ? keywords.trim() : undefined,
+      isPro ? outline.trim() : undefined,
+      isPro ? instructions.trim() : undefined
+    );
   };
 
   return (
@@ -109,6 +120,48 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
           )}
         </div>
       </div>
+
+      {/* Pro-only advanced inputs */}
+      {isPro && (
+        <div className="space-y-4 border border-amber-500/20 rounded-xl p-4 bg-amber-500/5">
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600 flex items-center gap-1">
+            <Crown className="w-3 h-3" /> Pro Advanced Inputs
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+            </label>
+            <Input
+              placeholder="e.g. SaaS, startup, business plan, funding"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Outline <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <Textarea
+              placeholder={"e.g.\nH1: How to Start a SaaS\nH2: Market Research\nH2: Building MVP\nH2: Pricing Strategy"}
+              value={outline}
+              onChange={(e) => setOutline(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Instructions <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <Textarea
+              placeholder="e.g. Focus on beginners, include real-world examples, avoid jargon"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              rows={3}
+            />
+          </div>
+        </div>
+      )}
 
       {/* Pro features note */}
       {!isPro && (
