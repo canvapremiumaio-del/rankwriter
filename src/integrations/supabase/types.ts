@@ -139,6 +139,45 @@ export type Database = {
         }
         Relationships: []
       }
+      templates: {
+        Row: {
+          created_at: string
+          id: string
+          instructions: string | null
+          name: string
+          outline: string | null
+          primary_keyword: string | null
+          secondary_keywords: string | null
+          tone: string
+          user_id: string
+          word_count: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          name: string
+          outline?: string | null
+          primary_keyword?: string | null
+          secondary_keywords?: string | null
+          tone?: string
+          user_id: string
+          word_count?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instructions?: string | null
+          name?: string
+          outline?: string | null
+          primary_keyword?: string | null
+          secondary_keywords?: string | null
+          tone?: string
+          user_id?: string
+          word_count?: string
+        }
+        Relationships: []
+      }
       user_plans: {
         Row: {
           created_at: string
