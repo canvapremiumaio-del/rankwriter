@@ -115,6 +115,16 @@ const Dashboard = () => {
           >
             {isPro ? "⭐ Pro Plan" : "Basic Plan"}
           </Badge>
+          {expiryInfo && (
+            <div className="mb-4 flex flex-col items-center gap-1">
+              <Badge className="bg-orange-500/15 text-orange-600 border border-orange-500/30 text-xs font-medium px-3 py-1">
+                ⏳ {expiryInfo.label}
+              </Badge>
+              <span className="text-[11px] text-muted-foreground">
+                Expires: {expiryInfo.date}
+              </span>
+            </div>
+          )}
           <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
             Rank<span className="text-primary">Writer</span>
           </h1>
