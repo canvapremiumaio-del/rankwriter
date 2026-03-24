@@ -12,7 +12,7 @@ const BlogHeader = () => {
         </h1>
       </div>
       <p className="text-muted-foreground text-lg max-w-md mx-auto">
-        Generate SEO-optimized blog articles instantly
+        Create SEO-optimized blog articles instantly
       </p>
     </header>
   );
