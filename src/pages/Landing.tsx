@@ -52,7 +52,7 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Content Strategist",
-    text: "RankWriter cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
+    text: "Rank Writer cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
     rating: 5,
     avatar: "SC",
     color: "bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)]",

@@ -7,17 +7,19 @@ const corsHeaders = {
 };
 
 function getBasicPrompt(topic: string, tone: string, wordCount: string) {
-  return `You are an SEO blog writer.
+  return `You are a blog writer.
 
-Write a blog on: ${topic}
+Write a blog article on: ${topic}
 
-Include:
-- A clear, engaging title
-- An introduction
-- 3-4 sections with headings
-- A conclusion
+Requirements:
+- Natural human-like tone
+- Simple and readable
+- Include title, intro, headings, and conclusion
+- Avoid robotic phrasing
+- Use conversational language
+- Mix short and long sentences for natural flow
+- Add personal touches and relatable examples
 
-Keep it simple and readable.
 Tone: ${tone}
 Word count: approximately ${wordCount} words.
 
@@ -25,21 +27,26 @@ Return the result using the return_blog_article function.`;
 }
 
 function getProPrompt(topic: string, tone: string, wordCount: string) {
-  return `You are a professional SEO content strategist.
+  return `You are a professional SEO strategist and expert human writer.
 
 Topic: ${topic}
 
-Step 1: Generate 5-8 SEO keywords related to the topic.
+Step 1: Generate 5 SEO keywords related to the topic.
 
 Step 2: Create a structured outline with:
 - SEO-optimized title
 - H1, H2, H3 headings
 
 Step 3: Write a high-quality, detailed article:
-- Engaging introduction with hook
+- Strong introduction with a hook
 - Detailed sections under each heading
-- Use bullet points, short paragraphs, and data where relevant
-- Maintain ${tone} tone
+- Human-like tone throughout
+- Mix sentence styles (short, medium, long)
+- Add transitions between sections
+- Avoid AI-like patterns and robotic phrasing
+- Use bullet points where appropriate
+- Include relatable examples and anecdotes
+- Tone: ${tone}
 - Word count: approximately ${wordCount} words
 
 Step 4: Add SEO elements:
@@ -52,7 +59,7 @@ Step 5: Format with:
 - Proper heading hierarchy
 - Readable structure
 
-Make it highly professional and SEO optimized.
+Make it highly professional, SEO optimized, and indistinguishable from human writing.
 
 Return the result using the return_blog_article function.`;
 }
