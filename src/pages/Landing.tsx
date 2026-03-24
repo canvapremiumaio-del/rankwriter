@@ -95,7 +95,7 @@ const Landing = () => {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-gray-900 text-lg tracking-tight">
-              Rank<span className="text-[hsl(172,66%,40%)]">Writer</span>
+              Rank <span className="text-[hsl(172,66%,40%)]">Writer</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
