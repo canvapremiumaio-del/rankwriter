@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { supabase } from "@/integrations/supabase/client";
 import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
