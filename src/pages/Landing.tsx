@@ -97,10 +97,10 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "50K+", label: "Articles Generated" },
+  { value: "50K+", label: "Articles Created" },
   { value: "12K+", label: "Happy Writers" },
   { value: "98%", label: "Satisfaction Rate" },
-  { value: "< 30s", label: "Generation Time" },
+  { value: "< 30s", label: "Creation Time" },
 ];
 
 const Landing = () => {
