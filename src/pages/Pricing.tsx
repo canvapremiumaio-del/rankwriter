@@ -159,9 +159,9 @@ const Pricing = () => {
         <div className="mt-10 text-center bg-muted/50 rounded-xl border border-border p-6">
           <MessageCircle className="w-6 h-6 text-primary mx-auto mb-2" />
           <p className="text-sm text-muted-foreground">
-            To upgrade or change your plan, enter a coupon code or contact the admin at{" "}
-            <a href="mailto:admin@aiblogwriter.pro" className="text-primary font-medium hover:underline">
-              admin@aiblogwriter.pro
+            To upgrade or change your plan, enter a coupon code or contact us on WhatsApp:{" "}
+            <a href="https://wa.me/923059694651" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline">
+              +92 305 9694651
             </a>
           </p>
         </div>
