@@ -121,6 +121,48 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
         </div>
       </div>
 
+      {/* Pro-only advanced inputs */}
+      {isPro && (
+        <div className="space-y-4 border border-amber-500/20 rounded-xl p-4 bg-amber-500/5">
+          <p className="text-xs font-semibold uppercase tracking-widest text-amber-600 flex items-center gap-1">
+            <Crown className="w-3 h-3" /> Pro Advanced Inputs
+          </p>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+            </label>
+            <Input
+              placeholder="e.g. SaaS, startup, business plan, funding"
+              value={keywords}
+              onChange={(e) => setKeywords(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Outline <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <Textarea
+              placeholder={"e.g.\nH1: How to Start a SaaS\nH2: Market Research\nH2: Building MVP\nH2: Pricing Strategy"}
+              value={outline}
+              onChange={(e) => setOutline(e.target.value)}
+              rows={4}
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Instructions <span className="text-muted-foreground font-normal">(optional)</span>
+            </label>
+            <Textarea
+              placeholder="e.g. Focus on beginners, include real-world examples, avoid jargon"
+              value={instructions}
+              onChange={(e) => setInstructions(e.target.value)}
+              rows={3}
+            />
+          </div>
+        </div>
+      )}
+
       {/* Pro features note */}
       {!isPro && (
         <div className="bg-muted/50 rounded-lg p-3 border border-border">
