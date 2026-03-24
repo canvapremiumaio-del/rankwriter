@@ -22,7 +22,6 @@ Deno.serve(async (req) => {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
-    // User client to get the user
     const userClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_ANON_KEY")!, {
       global: { headers: { Authorization: authHeader } },
     });
@@ -43,8 +42,6 @@ Deno.serve(async (req) => {
     }
 
     const trimmedCode = code.trim().toUpperCase();
-
-    // Use service role for all DB operations
     const adminClient = createClient(supabaseUrl, serviceKey);
 
     // Find coupon
@@ -85,11 +82,23 @@ Deno.serve(async (req) => {
       });
     }
 
-    // Redeem: update plan, log redemption, increment used_count
+    // Calculate expires_at if coupon has expires_in_days
+    let expiresAt: string | null = null;
+    if (coupon.expires_in_days && coupon.expires_in_days > 0) {
+      const expDate = new Date();
+      expDate.setDate(expDate.getDate() + coupon.expires_in_days);
+      expiresAt = expDate.toISOString();
+    }
+
+    // Redeem: update plan with expiry
     const { error: planError } = await adminClient
       .from("user_plans")
-      .update({ plan: coupon.plan, updated_at: new Date().toISOString() })
-      .eq("user_id", user.id);
+      .upsert({
+        user_id: user.id,
+        plan: coupon.plan,
+        updated_at: new Date().toISOString(),
+        expires_at: expiresAt,
+      }, { onConflict: "user_id" });
 
     if (planError) {
       return new Response(JSON.stringify({ error: "Failed to update plan" }), {
@@ -109,7 +118,12 @@ Deno.serve(async (req) => {
       .eq("id", coupon.id);
 
     return new Response(
-      JSON.stringify({ success: true, plan: coupon.plan }),
+      JSON.stringify({
+        success: true,
+        plan: coupon.plan,
+        expires_at: expiresAt,
+        expires_in_days: coupon.expires_in_days,
+      }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch {
