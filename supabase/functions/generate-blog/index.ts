@@ -26,18 +26,27 @@ Word count: approximately ${wordCount} words.
 Return the result using the return_blog_article function.`;
 }
 
-function getProPrompt(topic: string, tone: string, wordCount: string) {
+function getProPrompt(topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) {
+  const keywordsBlock = keywords
+    ? `\nUser-provided Keywords: ${keywords}\nUse these keywords naturally throughout the article.`
+    : `\nStep 1: Generate 5 SEO keywords related to the topic.`;
+
+  const outlineBlock = outline
+    ? `\nUser-provided Outline:\n${outline}\nFollow this outline strictly. Structure the article based on these headings.`
+    : `\nCreate a structured outline with:\n- SEO-optimized title\n- H1, H2, H3 headings`;
+
+  const instructionsBlock = instructions
+    ? `\nUser Instructions: ${instructions}\nDo not ignore these instructions.`
+    : "";
+
   return `You are a professional SEO strategist and expert human writer.
 
 Topic: ${topic}
+${keywordsBlock}
+${outlineBlock}
+${instructionsBlock}
 
-Step 1: Generate 5 SEO keywords related to the topic.
-
-Step 2: Create a structured outline with:
-- SEO-optimized title
-- H1, H2, H3 headings
-
-Step 3: Write a high-quality, detailed article:
+Write a high-quality, detailed article:
 - Strong introduction with a hook
 - Detailed sections under each heading
 - Human-like tone throughout
@@ -49,12 +58,12 @@ Step 3: Write a high-quality, detailed article:
 - Tone: ${tone}
 - Word count: approximately ${wordCount} words
 
-Step 4: Add SEO elements:
+Add SEO elements:
 - Meta description (150-160 characters)
 - Keywords used naturally throughout
 - Suggested tags
 
-Step 5: Format with:
+Format with:
 - Clean spacing
 - Proper heading hierarchy
 - Readable structure
