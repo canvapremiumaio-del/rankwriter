@@ -206,8 +206,8 @@ const Pricing = () => {
                   onChange={(e) => setCoupon(e.target.value)}
                   className="flex-1"
                 />
-                <Button onClick={handleCouponSubmit} disabled={!coupon.trim()}>
-                  Apply
+                <Button onClick={handleCouponSubmit} disabled={!coupon.trim() || redeeming}>
+                  {redeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
                 </Button>
               </div>
             </div>
