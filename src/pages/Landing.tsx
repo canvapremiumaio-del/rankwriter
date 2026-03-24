@@ -6,15 +6,15 @@ import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, C
 const features = [
   {
     icon: Sparkles,
-    title: "AI-Powered Writing",
-    description: "Generate complete, human-like blog articles in seconds — natural tone, no robotic phrasing.",
+    title: "Smart Blog Writing",
+    description: "Create complete, professional blog articles in seconds — natural tone, engaging style.",
     bg: "bg-[hsl(var(--accent))]",
     iconColor: "text-[hsl(var(--primary))]",
   },
   {
     icon: Search,
     title: "SEO Keywords & Meta",
-    description: "Auto-generated SEO keywords, meta descriptions, and tags to boost your Google rankings.",
+    description: "Built-in keyword research, meta descriptions, and tags to boost your Google rankings.",
     bg: "bg-violet-50",
     iconColor: "text-violet-600",
   },
@@ -27,8 +27,8 @@ const features = [
   },
   {
     icon: Wand2,
-    title: "Humanize Article",
-    description: "One-click AI rewrite to make any article sound more natural, engaging, and human-written.",
+    title: "Content Enhancer",
+    description: "One-click rewrite to make any article sound more natural, engaging, and polished.",
     bg: "bg-pink-50",
     iconColor: "text-pink-600",
   },
@@ -49,14 +49,14 @@ const features = [
   {
     icon: Zap,
     title: "Up to 2,500 Words",
-    description: "Generate longer, more detailed articles with extended word counts on the Pro plan.",
+    description: "Create longer, more detailed articles with extended word counts on the Pro plan.",
     bg: "bg-amber-50",
     iconColor: "text-amber-600",
   },
   {
     icon: Copy,
     title: "Copy & Share",
-    description: "Instantly copy your generated article to clipboard — paste anywhere, anytime.",
+    description: "Instantly copy your article to clipboard — paste anywhere, anytime.",
     bg: "bg-teal-50",
     iconColor: "text-teal-600",
   },
@@ -97,10 +97,10 @@ const testimonials = [
 ];
 
 const stats = [
-  { value: "50K+", label: "Articles Generated" },
+  { value: "50K+", label: "Articles Created" },
   { value: "12K+", label: "Happy Writers" },
   { value: "98%", label: "Satisfaction Rate" },
-  { value: "< 30s", label: "Generation Time" },
+  { value: "< 30s", label: "Creation Time" },
 ];
 
 const Landing = () => {
@@ -140,17 +140,17 @@ const Landing = () => {
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center py-20 md:py-32">
           <Badge className="mb-6 bg-[hsl(172,50%,94%)] text-[hsl(172,66%,30%)] border-[hsl(172,50%,85%)] hover:bg-[hsl(172,50%,94%)] text-sm font-medium px-4 py-1.5">
-            ✨ Powered by Advanced AI
+            ✨ Smart SEO Content Platform
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
             Write & Rank with
             <br />
             <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] bg-clip-text text-transparent">
-              AI Precision
+              SEO Precision
             </span>
           </h1>
           <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Generate professional, SEO-optimized blog posts with AI-powered keyword research,
+            Create professional, SEO-optimized blog posts with built-in keyword research,
             structured outlines, and export-ready formatting.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
