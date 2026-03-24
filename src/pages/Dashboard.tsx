@@ -4,7 +4,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText } from "lucide-react";
+import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText, Wand2, Copy, Globe } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { differenceInDays, differenceInHours, differenceInMinutes, format } from "date-fns";
 
