@@ -92,6 +92,7 @@ export type Database = {
         Row: {
           code: string
           created_at: string
+          expires_in_days: number | null
           id: string
           is_active: boolean
           max_uses: number
@@ -101,6 +102,7 @@ export type Database = {
         Insert: {
           code: string
           created_at?: string
+          expires_in_days?: number | null
           id?: string
           is_active?: boolean
           max_uses?: number
@@ -110,6 +112,7 @@ export type Database = {
         Update: {
           code?: string
           created_at?: string
+          expires_in_days?: number | null
           id?: string
           is_active?: boolean
           max_uses?: number
@@ -139,6 +142,7 @@ export type Database = {
       user_plans: {
         Row: {
           created_at: string
+          expires_at: string | null
           id: string
           plan: Database["public"]["Enums"]["app_plan"]
           updated_at: string
@@ -146,6 +150,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           plan?: Database["public"]["Enums"]["app_plan"]
           updated_at?: string
@@ -153,6 +158,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          expires_at?: string | null
           id?: string
           plan?: Database["public"]["Enums"]["app_plan"]
           updated_at?: string
