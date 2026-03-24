@@ -199,6 +199,29 @@ const Admin = () => {
     }
   };
 
+  const handleAddUser = async () => {
+    if (!newEmail.trim() || !newPassword.trim()) return;
+    setAddingUser(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-create-user", {
+        body: { email: newEmail.trim(), password: newPassword, plan: newPlan },
+      });
+      if (error || data?.error) {
+        toast({ title: "Error", description: data?.error || "Failed to create user", variant: "destructive" });
+      } else {
+        toast({ title: "User Created! ✅", description: `${newEmail} has been added successfully.` });
+        setAddDialogOpen(false);
+        setNewEmail("");
+        setNewPassword("");
+        setNewPlan("basic");
+        fetchUsers();
+      }
+    } catch {
+      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
+    }
+    setAddingUser(false);
+  };
+
   const filteredUsers = users.filter(
     (u) => !search || u.email?.toLowerCase().includes(search.toLowerCase())
   );
