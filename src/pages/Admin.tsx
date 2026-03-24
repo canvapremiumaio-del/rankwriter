@@ -23,7 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle, ShieldCheck, ShieldOff } from "lucide-react";
+import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle, ShieldCheck, ShieldOff, UserPlus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface UserData {
   id: string;
@@ -44,6 +51,13 @@ const Admin = () => {
   const [search, setSearch] = useState("");
   const [updatingPlan, setUpdatingPlan] = useState<string | null>(null);
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+
+  // Add user dialog state
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPlan, setNewPlan] = useState<"basic" | "pro">("basic");
+  const [addingUser, setAddingUser] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
