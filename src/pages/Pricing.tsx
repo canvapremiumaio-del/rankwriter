@@ -69,13 +69,26 @@ const Pricing = () => {
     setDialogOpen(true);
   };
 
-  const handleCouponSubmit = () => {
-    toast({
-      title: "Coupon Submitted",
-      description: "Your coupon code has been submitted. Our team will verify and activate your plan shortly.",
-    });
-    setDialogOpen(false);
-    setCoupon("");
+  const handleCouponSubmit = async () => {
+    if (!coupon.trim()) return;
+    setRedeeming(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("redeem-coupon", {
+        body: { code: coupon.trim() },
+      });
+      if (error || data?.error) {
+        toast({ title: "Error", description: data?.error || "Failed to redeem coupon", variant: "destructive" });
+      } else {
+        toast({ title: "Plan Activated! 🎉", description: `Your plan has been upgraded to ${data.plan}.` });
+        setDialogOpen(false);
+        setCoupon("");
+        // Reload to reflect new plan
+        window.location.reload();
+      }
+    } catch {
+      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
+    }
+    setRedeeming(false);
   };
 
   if (authLoading || planLoading) {
