@@ -62,7 +62,22 @@ const features = [
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { plan, isPro, loading: planLoading } = useUserPlan();
+  const { plan, isPro, loading: planLoading, expiresAt } = useUserPlan();
+
+  const expiryInfo = useMemo(() => {
+    if (!expiresAt || !isPro) return null;
+    const expDate = new Date(expiresAt);
+    const now = new Date();
+    if (expDate <= now) return null;
+    const days = differenceInDays(expDate, now);
+    const hours = differenceInHours(expDate, now) % 24;
+    const mins = differenceInMinutes(expDate, now) % 60;
+    let label = "";
+    if (days > 0) label = `${days}d ${hours}h remaining`;
+    else if (hours > 0) label = `${hours}h ${mins}m remaining`;
+    else label = `${mins}m remaining`;
+    return { label, date: format(expDate, "MMM d, yyyy h:mm a") };
+  }, [expiresAt, isPro]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/landing", { replace: true });
