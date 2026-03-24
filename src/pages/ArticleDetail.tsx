@@ -71,7 +71,7 @@ const ArticleDetail = () => {
         </Button>
 
         <div className="space-y-6">
-          <BlogOutput article={article} onArticleChange={(updated) => setArticle({ ...article, ...updated })} editable />
+          <BlogOutput article={article} onArticleChange={(updated) => setArticle({ ...article, ...updated })} editable isPro={isPro} />
           <BlogActions article={article} isPro={isPro} />
         </div>
       </div>
