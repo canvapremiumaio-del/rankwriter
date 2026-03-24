@@ -11,6 +11,7 @@ import History from "./pages/History";
 import Pricing from "./pages/Pricing";
 import ArticleDetail from "./pages/ArticleDetail";
 import Landing from "./pages/Landing";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
             <Route path="/history" element={<History />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/article/:id" element={<ArticleDetail />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

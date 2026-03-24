@@ -3,7 +3,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PenLine, History, LogOut, CreditCard, LayoutDashboard } from "lucide-react";
+import { PenLine, History, LogOut, CreditCard, LayoutDashboard, Shield } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
 
 const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
   <Link
@@ -20,6 +21,7 @@ const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; lab
 const NavBar = () => {
   const { user, signOut } = useAuth();
   const { plan } = useUserPlan();
+  const { isAdmin } = useAdmin();
   const location = useLocation();
 
   if (!user) return null;
@@ -32,6 +34,7 @@ const NavBar = () => {
           <NavLink to="/generate" icon={PenLine} label="Generate" active={location.pathname === "/generate"} />
           <NavLink to="/history" icon={History} label="History" active={location.pathname === "/history"} />
           <NavLink to="/pricing" icon={CreditCard} label="Pricing" active={location.pathname === "/pricing"} />
+          {isAdmin && <NavLink to="/admin" icon={Shield} label="Admin" active={location.pathname === "/admin"} />}
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="secondary" className="text-[10px] font-semibold uppercase hidden sm:flex">
