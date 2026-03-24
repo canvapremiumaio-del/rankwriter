@@ -54,6 +54,7 @@ ${primaryBlock}
 ${secondaryBlock}
 ${outlineBlock}
 ${instructionsBlock}
+${templateBlock}
 
 Write a high-quality, detailed article:
 - Strong introduction with a hook
