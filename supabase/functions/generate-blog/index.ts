@@ -39,6 +39,10 @@ function getProPrompt(topic: string, tone: string, wordCount: string, primaryKey
     ? `\nUser-provided Outline:\n${outline}\nFollow this outline strictly. Structure the article based on these headings.`
     : `\nCreate a structured outline with:\n- SEO-optimized title\n- H1, H2, H3 headings`;
 
+  const templateBlock = templateInstructions
+    ? `\nSaved Template Instructions: ${templateInstructions}\nFollow these template instructions consistently for writing style, tone, and structure.`
+    : "";
+
   const instructionsBlock = instructions
     ? `\nUser Instructions: ${instructions}\nDo not ignore these instructions.`
     : "";
