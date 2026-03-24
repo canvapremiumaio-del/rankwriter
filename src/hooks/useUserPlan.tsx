@@ -12,54 +12,70 @@ export const useUserPlan = () => {
 
   useEffect(() => {
     if (!user) {
+      setPlan("basic");
+      setExpiresAt(null);
       setLoading(false);
       return;
     }
 
+    let cancelled = false;
+
     const fetchPlan = async () => {
-      const { data, error } = await supabase
-        .from("user_plans")
-        .select("plan, expires_at")
-        .eq("user_id", user.id)
-        .maybeSingle();
+      try {
+        const { data, error } = await supabase
+          .from("user_plans")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
 
-      if (error) {
-        setLoading(false);
-        return;
-      }
+        if (cancelled) return;
 
-      if (data?.plan) {
-        // Check if plan has expired
-        const expired = data.expires_at && new Date(data.expires_at) < new Date();
-        if (expired && data.plan === "pro") {
-          // Auto-downgrade to basic
+        if (error) {
+          setLoading(false);
+          return;
+        }
+
+        if (data) {
+          const planExpiry = (data as any).expires_at as string | null;
+          const expired = planExpiry && new Date(planExpiry) < new Date();
+
+          if (expired && data.plan === "pro") {
+            await supabase
+              .from("user_plans")
+              .update({ plan: "basic", updated_at: new Date().toISOString() } as any)
+              .eq("user_id", user.id);
+            if (!cancelled) {
+              setPlan("basic");
+              setExpiresAt(null);
+            }
+          } else {
+            if (!cancelled) {
+              setPlan(data.plan as PlanType);
+              setExpiresAt(planExpiry || null);
+            }
+          }
+        } else {
+          // Self-heal missing row
           await supabase
             .from("user_plans")
-            .update({ plan: "basic", expires_at: null, updated_at: new Date().toISOString() })
-            .eq("user_id", user.id);
-          setPlan("basic");
-          setExpiresAt(null);
-        } else {
-          setPlan(data.plan as PlanType);
-          setExpiresAt(data.expires_at || null);
+            .upsert(
+              { user_id: user.id, plan: "basic", updated_at: new Date().toISOString() },
+              { onConflict: "user_id" }
+            );
+          if (!cancelled) setPlan("basic");
         }
-        setLoading(false);
-        return;
+      } catch {
+        // ignore
+      } finally {
+        if (!cancelled) setLoading(false);
       }
-
-      // Self-heal missing row
-      await supabase
-        .from("user_plans")
-        .upsert(
-          { user_id: user.id, plan: "basic", updated_at: new Date().toISOString() },
-          { onConflict: "user_id" }
-        );
-
-      setPlan("basic");
-      setLoading(false);
     };
 
     fetchPlan();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user]);
 
   const updatePlan = async (newPlan: PlanType) => {
