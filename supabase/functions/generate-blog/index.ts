@@ -26,7 +26,7 @@ Word count: approximately ${wordCount} words.
 Return the result using the return_blog_article function.`;
 }
 
-function getProPrompt(topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) {
+function getProPrompt(topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string, templateInstructions?: string) {
   const primaryBlock = primaryKeyword
     ? `\nPrimary Keyword: ${primaryKeyword}\n- Use the primary keyword in:\n  • Title\n  • Introduction (first paragraph)\n  • At least one H2 heading\n  • Naturally throughout the article`
     : "";
@@ -39,6 +39,10 @@ function getProPrompt(topic: string, tone: string, wordCount: string, primaryKey
     ? `\nUser-provided Outline:\n${outline}\nFollow this outline strictly. Structure the article based on these headings.`
     : `\nCreate a structured outline with:\n- SEO-optimized title\n- H1, H2, H3 headings`;
 
+  const templateBlock = templateInstructions
+    ? `\nSaved Template Instructions: ${templateInstructions}\nFollow these template instructions consistently for writing style, tone, and structure.`
+    : "";
+
   const instructionsBlock = instructions
     ? `\nUser Instructions: ${instructions}\nDo not ignore these instructions.`
     : "";
@@ -50,6 +54,7 @@ ${primaryBlock}
 ${secondaryBlock}
 ${outlineBlock}
 ${instructionsBlock}
+${templateBlock}
 
 Write a high-quality, detailed article:
 - Strong introduction with a hook
