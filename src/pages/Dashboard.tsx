@@ -5,7 +5,8 @@ import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { differenceInDays, differenceInHours, differenceInMinutes, format } from "date-fns";
 
 const features = [
   {
@@ -61,7 +62,22 @@ const features = [
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { plan, isPro, loading: planLoading } = useUserPlan();
+  const { plan, isPro, loading: planLoading, expiresAt } = useUserPlan();
+
+  const expiryInfo = useMemo(() => {
+    if (!expiresAt || !isPro) return null;
+    const expDate = new Date(expiresAt);
+    const now = new Date();
+    if (expDate <= now) return null;
+    const days = differenceInDays(expDate, now);
+    const hours = differenceInHours(expDate, now) % 24;
+    const mins = differenceInMinutes(expDate, now) % 60;
+    let label = "";
+    if (days > 0) label = `${days}d ${hours}h remaining`;
+    else if (hours > 0) label = `${hours}h ${mins}m remaining`;
+    else label = `${mins}m remaining`;
+    return { label, date: format(expDate, "MMM d, yyyy h:mm a") };
+  }, [expiresAt, isPro]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/landing", { replace: true });
@@ -99,6 +115,16 @@ const Dashboard = () => {
           >
             {isPro ? "⭐ Pro Plan" : "Basic Plan"}
           </Badge>
+          {expiryInfo && (
+            <div className="mb-4 flex flex-col items-center gap-1">
+              <Badge className="bg-orange-500/15 text-orange-600 border border-orange-500/30 text-xs font-medium px-3 py-1">
+                ⏳ {expiryInfo.label}
+              </Badge>
+              <span className="text-[11px] text-muted-foreground">
+                Expires: {expiryInfo.date}
+              </span>
+            </div>
+          )}
           <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
             Rank<span className="text-primary">Writer</span>
           </h1>
