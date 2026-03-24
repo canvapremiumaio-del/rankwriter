@@ -301,6 +301,11 @@ const Admin = () => {
             </Table>
           )}
         </div>
+
+        {/* Coupon Management */}
+        <div className="mt-8">
+          <AdminCoupons />
+        </div>
       </div>
     </div>
   );
