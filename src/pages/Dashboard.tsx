@@ -153,7 +153,7 @@ const Dashboard = () => {
             Rank<span className="text-primary">Writer</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-lg mx-auto mb-8">
-            Generate SEO-optimized articles in seconds. Write smarter, rank higher.
+            Create SEO-optimized articles in seconds. Write smarter, rank higher.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Button size="lg" onClick={() => navigate("/generate")} className="gap-2 h-12 px-8 text-base font-semibold">
