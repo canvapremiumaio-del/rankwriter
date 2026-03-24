@@ -12,7 +12,7 @@ const features = [
   {
     icon: Sparkles,
     title: "AI Blog Generation",
-    description: "Generate high-quality articles powered by AI in seconds.",
+    description: "Generate complete, human-like blog articles in seconds — natural tone, no robotic phrasing.",
     basic: "Simple blog structure",
     pro: "Advanced SEO-optimized content with detailed sections",
     proOnly: false,
@@ -20,7 +20,7 @@ const features = [
   {
     icon: Search,
     title: "SEO Keywords & Meta",
-    description: "Auto-generated SEO keywords, meta descriptions, and tags.",
+    description: "Auto-generated SEO keywords, meta descriptions, and tags to boost your Google rankings.",
     basic: null,
     pro: "Full SEO toolkit with keywords, meta description & tags",
     proOnly: true,
@@ -28,15 +28,23 @@ const features = [
   {
     icon: LayoutList,
     title: "Smart Content Structuring",
-    description: "Professional outlines with proper heading hierarchy.",
+    description: "Professional H1, H2, H3 heading hierarchy with structured outlines and clean formatting.",
     basic: "Basic outline",
     pro: "H1, H2, H3 headings with professional structure",
     proOnly: false,
   },
   {
+    icon: Wand2,
+    title: "Humanize Article",
+    description: "One-click AI rewrite to make any article sound more natural, engaging, and human-written.",
+    basic: null,
+    pro: "AI-powered humanization rewrite",
+    proOnly: true,
+  },
+  {
     icon: Zap,
     title: "Extended Word Count",
-    description: "Generate longer, more detailed articles up to 2,500 words.",
+    description: "Generate longer, more detailed articles with extended word counts.",
     basic: "Up to 1,000 words",
     pro: "Up to 2,500 words",
     proOnly: false,
@@ -56,6 +64,22 @@ const features = [
     basic: null,
     pro: "One-click Word export",
     proOnly: true,
+  },
+  {
+    icon: Copy,
+    title: "Copy & Share",
+    description: "Instantly copy your generated article to clipboard — paste anywhere, anytime.",
+    basic: "Copy to clipboard",
+    pro: "Copy to clipboard",
+    proOnly: false,
+  },
+  {
+    icon: Globe,
+    title: "Any Topic, Any Niche",
+    description: "From tech to travel, finance to food — write about anything with confidence.",
+    basic: "All topics supported",
+    pro: "All topics with priority quality",
+    proOnly: false,
   },
 ];
 
