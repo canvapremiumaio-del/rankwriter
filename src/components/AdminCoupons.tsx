@@ -20,6 +20,7 @@ interface Coupon {
   max_uses: number;
   used_count: number;
   created_at: string;
+  expires_in_days: number | null;
 }
 
 const AdminCoupons = () => {
@@ -29,6 +30,7 @@ const AdminCoupons = () => {
   const [newCode, setNewCode] = useState("");
   const [newPlan, setNewPlan] = useState<"basic" | "pro">("pro");
   const [newMaxUses, setNewMaxUses] = useState("1");
+  const [newExpiry, setNewExpiry] = useState("");
   const [creating, setCreating] = useState(false);
 
   useEffect(() => {
@@ -41,7 +43,7 @@ const AdminCoupons = () => {
       .select("*")
       .order("created_at", { ascending: false });
 
-    if (!error && data) setCoupons(data as Coupon[]);
+    if (!error && data) setCoupons(data as unknown as Coupon[]);
     setLoading(false);
   };
 
@@ -64,19 +66,27 @@ const AdminCoupons = () => {
       return;
     }
 
+    const expiryDays = newExpiry ? parseInt(newExpiry) : null;
+    if (expiryDays !== null && (isNaN(expiryDays) || expiryDays < 1 || expiryDays > 365)) {
+      toast({ title: "Error", description: "Expiry must be 1-365 days", variant: "destructive" });
+      return;
+    }
+
     setCreating(true);
     const { error } = await supabase.from("coupons").insert({
       code: trimmed,
       plan: newPlan,
       max_uses: maxUses,
-    });
+      expires_in_days: expiryDays,
+    } as any);
 
     if (error) {
       toast({ title: "Error", description: error.message.includes("duplicate") ? "Code already exists" : "Failed to create coupon", variant: "destructive" });
     } else {
-      toast({ title: "Coupon Created", description: `Code: ${trimmed}` });
+      toast({ title: "Coupon Created", description: `Code: ${trimmed}${expiryDays ? ` (${expiryDays} day${expiryDays > 1 ? 's' : ''} access)` : ' (Unlimited)'}` });
       setNewCode("");
       setNewMaxUses("1");
+      setNewExpiry("");
       fetchCoupons();
     }
     setCreating(false);
@@ -150,10 +160,25 @@ const AdminCoupons = () => {
               className="h-9"
             />
           </div>
+          <div className="w-24">
+            <label className="text-xs text-muted-foreground mb-1 block">Expiry (days)</label>
+            <Input
+              type="number"
+              min={1}
+              max={365}
+              placeholder="∞"
+              value={newExpiry}
+              onChange={(e) => setNewExpiry(e.target.value)}
+              className="h-9"
+            />
+          </div>
           <Button onClick={handleCreate} disabled={creating} className="h-9">
             {creating ? <Loader2 className="w-4 h-4 animate-spin" /> : "Create"}
           </Button>
         </div>
+        <p className="text-[11px] text-muted-foreground mt-2">
+          Leave "Expiry" empty for unlimited access. Set days (e.g. 1, 7, 30) for temporary pro access.
+        </p>
       </div>
 
       {/* Coupons table */}
@@ -170,6 +195,7 @@ const AdminCoupons = () => {
               <TableRow>
                 <TableHead>Code</TableHead>
                 <TableHead>Plan</TableHead>
+                <TableHead>Duration</TableHead>
                 <TableHead>Uses</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -190,6 +216,15 @@ const AdminCoupons = () => {
                     <Badge variant="secondary" className={c.plan === "pro" ? "bg-amber-500/15 text-amber-600" : ""}>
                       {c.plan}
                     </Badge>
+                  </TableCell>
+                  <TableCell className="text-sm">
+                    {c.expires_in_days ? (
+                      <Badge variant="secondary" className="bg-sky-500/15 text-sky-600 text-[10px]">
+                        {c.expires_in_days} day{c.expires_in_days > 1 ? "s" : ""}
+                      </Badge>
+                    ) : (
+                      <span className="text-muted-foreground text-xs">Unlimited</span>
+                    )}
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
                     {c.used_count} / {c.max_uses}
