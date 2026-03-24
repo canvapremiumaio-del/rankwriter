@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -12,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Loader2, Crown } from "lucide-react";
 
 interface BlogInputFormProps {
-  onGenerate: (topic: string, tone: string, wordCount: string) => void;
+  onGenerate: (topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) => void;
   isLoading: boolean;
   isPro?: boolean;
 }
@@ -21,6 +22,9 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
+  const [keywords, setKeywords] = useState("");
+  const [outline, setOutline] = useState("");
+  const [instructions, setInstructions] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
