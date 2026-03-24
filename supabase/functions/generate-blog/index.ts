@@ -6,54 +6,75 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function getBasicPrompt(topic: string, tone: string, wordCount: string) {
+  return `You are an SEO blog writer.
+
+Write a blog on: ${topic}
+
+Include:
+- A clear, engaging title
+- An introduction
+- 3-4 sections with headings
+- A conclusion
+
+Keep it simple and readable.
+Tone: ${tone}
+Word count: approximately ${wordCount} words.
+
+Return the result using the return_blog_article function.`;
+}
+
+function getProPrompt(topic: string, tone: string, wordCount: string) {
+  return `You are a professional SEO content strategist.
+
+Topic: ${topic}
+
+Step 1: Generate 5-8 SEO keywords related to the topic.
+
+Step 2: Create a structured outline with:
+- SEO-optimized title
+- H1, H2, H3 headings
+
+Step 3: Write a high-quality, detailed article:
+- Engaging introduction with hook
+- Detailed sections under each heading
+- Use bullet points, short paragraphs, and data where relevant
+- Maintain ${tone} tone
+- Word count: approximately ${wordCount} words
+
+Step 4: Add SEO elements:
+- Meta description (150-160 characters)
+- Keywords used naturally throughout
+- Suggested tags
+
+Step 5: Format with:
+- Clean spacing
+- Proper heading hierarchy
+- Readable structure
+
+Make it highly professional and SEO optimized.
+
+Return the result using the return_blog_article function.`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    const { topic, tone, wordCount } = await req.json();
+    const { topic, tone, wordCount, plan } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const prompt = `You are a professional SEO content writer and formatter.
+    const isPro = plan === "pro";
+    const prompt = isPro
+      ? getProPrompt(topic, tone, wordCount)
+      : getBasicPrompt(topic, tone, wordCount);
 
-Task: Create a fully optimized blog article.
-
-Topic: ${topic}
-
-Step 1: Generate 5 SEO keywords related to the topic.
-
-Step 2: Create a structured outline:
-- Title (SEO optimized)
-- H1, H2, H3 headings
-
-Step 3: Write a high-quality article:
-- Engaging introduction
-- Detailed sections under each heading
-- Use bullet points and short paragraphs
-- Maintain ${tone} tone
-- Word count: ${wordCount} words
-
-Step 4: Add SEO elements:
-- Meta description (150–160 characters)
-- Keywords used naturally
-- Suggested tags
-
-Step 5: Format properly:
-- Clean spacing
-- Proper headings
-- Readable structure
-
-Return the result as a JSON object with these exact keys:
-- title (string)
-- metaDescription (string)
-- keywords (array of strings)
-- outline (string with the structured outline)
-- article (string with the full article body)
-- conclusion (string)
-
-Return ONLY the JSON object, no markdown fences.`;
+    const systemMessage = isPro
+      ? "You are an expert SEO content strategist. Produce highly detailed, professionally structured content."
+      : "You are a helpful blog writer. Produce clear, readable blog content.";
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -66,11 +87,7 @@ Return ONLY the JSON object, no markdown fences.`;
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            {
-              role: "system",
-              content:
-                "You are an expert SEO blog writer. Always respond with valid JSON only, no markdown code fences.",
-            },
+            { role: "system", content: systemMessage },
             { role: "user", content: prompt },
           ],
           tools: [
@@ -125,7 +142,6 @@ Return ONLY the JSON object, no markdown fences.`;
     if (toolCall) {
       article = JSON.parse(toolCall.function.arguments);
     } else {
-      // Fallback: parse from content
       const content = data.choices?.[0]?.message?.content || "";
       const cleaned = content.replace(/```json\n?|```\n?/g, "").trim();
       article = JSON.parse(cleaned);

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useUserPlan } from "@/hooks/useUserPlan";
 import { useNavigate } from "react-router-dom";
-import BlogHeader from "@/components/BlogHeader";
-import BlogOutput from "@/components/BlogOutput";
-import BlogActions from "@/components/BlogActions";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Trash2, ArrowLeft, ChevronDown, ChevronUp, Loader2 } from "lucide-react";
+import { Trash2, ArrowLeft, Loader2, ExternalLink, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { BlogArticle } from "@/types/blog";
 import NavBar from "@/components/NavBar";
@@ -28,11 +26,12 @@ interface SavedArticle {
 
 const History = () => {
   const { user, loading: authLoading } = useAuth();
+  const { isPro } = useUserPlan();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [articles, setArticles] = useState<SavedArticle[]>([]);
   const [loading, setLoading] = useState(true);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [regeneratingId, setRegeneratingId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
@@ -46,11 +45,8 @@ const History = () => {
         .select("*")
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error(error);
-      } else {
-        setArticles(data || []);
-      }
+      if (error) console.error(error);
+      else setArticles(data || []);
       setLoading(false);
     };
     fetchArticles();
@@ -66,14 +62,44 @@ const History = () => {
     }
   };
 
-  const toBlogArticle = (a: SavedArticle): BlogArticle => ({
-    title: a.title,
-    metaDescription: a.meta_description,
-    keywords: a.keywords,
-    outline: a.outline,
-    article: a.article,
-    conclusion: a.conclusion,
-  });
+  const handleRegenerate = async (a: SavedArticle) => {
+    setRegeneratingId(a.id);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-blog", {
+        body: { topic: a.topic, tone: a.tone, wordCount: a.word_count, plan: isPro ? "pro" : "basic" },
+      });
+      if (error) throw error;
+
+      const generated = data as BlogArticle;
+      if (user) {
+        await supabase.from("articles").insert({
+          user_id: user.id,
+          topic: a.topic,
+          tone: a.tone,
+          word_count: a.word_count,
+          title: generated.title,
+          meta_description: generated.metaDescription,
+          keywords: generated.keywords,
+          outline: generated.outline,
+          article: generated.article,
+          conclusion: generated.conclusion,
+        });
+      }
+
+      // Refresh the list
+      const { data: refreshed } = await supabase
+        .from("articles")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (refreshed) setArticles(refreshed);
+
+      toast({ title: "Regenerated! ✨", description: "A new version has been created." });
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to regenerate.", variant: "destructive" });
+    } finally {
+      setRegeneratingId(null);
+    }
+  };
 
   if (authLoading || loading) {
     return (
@@ -92,24 +118,26 @@ const History = () => {
         {articles.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">No articles yet.</p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate("/")}>
+            <Button variant="outline" className="mt-4" onClick={() => navigate("/generate")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Generate your first article
             </Button>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {articles.map((a) => (
               <div
                 key={a.id}
-                className="bg-card rounded-2xl shadow-card border border-border overflow-hidden"
+                className="bg-card rounded-2xl border border-border p-5 hover:shadow-md transition-shadow"
               >
-                <button
-                  onClick={() => setExpandedId(expandedId === a.id ? null : a.id)}
-                  className="w-full p-5 text-left flex items-start justify-between gap-4"
-                >
+                <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0 flex-1">
-                    <h3 className="font-semibold text-foreground truncate">{a.title}</h3>
+                    <h3
+                      className="font-semibold text-foreground truncate cursor-pointer hover:text-primary transition-colors"
+                      onClick={() => navigate(`/article/${a.id}`)}
+                    >
+                      {a.title}
+                    </h3>
                     <div className="flex flex-wrap gap-2 mt-2">
                       <Badge variant="secondary" className="text-xs">{a.tone}</Badge>
                       <Badge variant="secondary" className="text-xs">{a.word_count} words</Badge>
@@ -118,30 +146,35 @@ const History = () => {
                       </span>
                     </div>
                   </div>
-                  {expandedId === a.id ? (
-                    <ChevronUp className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
-                  ) : (
-                    <ChevronDown className="w-5 h-5 text-muted-foreground shrink-0 mt-1" />
-                  )}
-                </button>
-
-                {expandedId === a.id && (
-                  <div className="px-5 pb-5 space-y-6 animate-in fade-in slide-in-from-top-2 duration-300">
-                    <BlogOutput article={toBlogArticle(a)} />
-                    <BlogActions article={toBlogArticle(a)} />
-                    <div className="flex justify-end">
-                      <Button
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleDelete(a.id)}
-                        className="gap-2"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                        Delete
-                      </Button>
-                    </div>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => navigate(`/article/${a.id}`)}
+                      title="View article"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleRegenerate(a)}
+                      disabled={regeneratingId === a.id}
+                      title="Regenerate"
+                    >
+                      <RefreshCw className={`w-4 h-4 ${regeneratingId === a.id ? "animate-spin" : ""}`} />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => handleDelete(a.id)}
+                      title="Delete"
+                      className="text-destructive hover:text-destructive"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </Button>
                   </div>
-                )}
+                </div>
               </div>
             ))}
           </div>

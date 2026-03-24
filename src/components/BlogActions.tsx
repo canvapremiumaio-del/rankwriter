@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { Copy, FileDown, FileText } from "lucide-react";
+import { Copy, FileDown, FileText, Lock } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { BlogArticle } from "@/types/blog";
+import { useNavigate } from "react-router-dom";
 
 interface BlogActionsProps {
   article: BlogArticle;
+  isPro?: boolean;
 }
 
 function buildPlainText(article: BlogArticle): string {
@@ -26,16 +28,25 @@ function buildPlainText(article: BlogArticle): string {
   ].join("\n");
 }
 
-const BlogActions = ({ article }: BlogActionsProps) => {
+const BlogActions = ({ article, isPro = true }: BlogActionsProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(buildPlainText(article));
     toast({ title: "Copied!", description: "Article copied to clipboard." });
   };
 
+  const handleUpgradePrompt = () => {
+    toast({
+      title: "Pro Feature 🔒",
+      description: "Upgrade to Pro to unlock export features.",
+    });
+    navigate("/pricing");
+  };
+
   const handleDownloadPdf = async () => {
-    // Dynamic import to keep bundle small
+    if (!isPro) return handleUpgradePrompt();
     const { default: jsPDF } = await import("jspdf");
     const doc = new jsPDF();
     const margin = 15;
@@ -71,6 +82,7 @@ const BlogActions = ({ article }: BlogActionsProps) => {
   };
 
   const handleDownloadDoc = () => {
+    if (!isPro) return handleUpgradePrompt();
     const html = `
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>${article.title}</title></head>
@@ -82,9 +94,7 @@ const BlogActions = ({ article }: BlogActionsProps) => {
 <h3>Article</h3><div style="white-space:pre-wrap;">${article.article}</div>
 <h3>Conclusion</h3><p style="white-space:pre-wrap;">${article.conclusion}</p>
 </body></html>`;
-    const blob = new Blob([html], {
-      type: "application/msword",
-    });
+    const blob = new Blob([html], { type: "application/msword" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -100,11 +110,11 @@ const BlogActions = ({ article }: BlogActionsProps) => {
         Copy Article
       </Button>
       <Button variant="outline" onClick={handleDownloadPdf} className="gap-2">
-        <FileDown className="w-4 h-4" />
+        {isPro ? <FileDown className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
         Download PDF
       </Button>
       <Button variant="outline" onClick={handleDownloadDoc} className="gap-2">
-        <FileText className="w-4 h-4" />
+        {isPro ? <FileText className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
         Download Word
       </Button>
     </div>
