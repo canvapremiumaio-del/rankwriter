@@ -3,7 +3,8 @@ import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { PenLine, History, LogOut, CreditCard, LayoutDashboard } from "lucide-react";
+import { PenLine, History, LogOut, CreditCard, LayoutDashboard, Shield } from "lucide-react";
+import { useAdmin } from "@/hooks/useAdmin";
 
 const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; label: string; active: boolean }) => (
   <Link
