@@ -85,13 +85,13 @@ serve(async (req) => {
   }
 
   try {
-    const { topic, tone, wordCount, plan, keywords, outline, instructions } = await req.json();
+    const { topic, tone, wordCount, plan, primaryKeyword, secondaryKeywords, outline, instructions } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const isPro = plan === "pro";
     const prompt = isPro
-      ? getProPrompt(topic, tone, wordCount, keywords, outline, instructions)
+      ? getProPrompt(topic, tone, wordCount, primaryKeyword, secondaryKeywords, outline, instructions)
       : getBasicPrompt(topic, tone, wordCount);
 
     const systemMessage = isPro

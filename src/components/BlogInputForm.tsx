@@ -131,12 +131,23 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
           </p>
           <div>
             <label className="block text-sm font-medium text-foreground mb-2">
-              Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+              Primary Keyword
             </label>
             <Input
-              placeholder="e.g. SaaS, startup, business plan, funding"
-              value={keywords}
-              onChange={(e) => setKeywords(e.target.value)}
+              placeholder="e.g. how to start a SaaS business"
+              value={primaryKeyword}
+              onChange={(e) => setPrimaryKeyword(e.target.value)}
+              className="h-11"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Secondary Keywords <span className="text-muted-foreground font-normal">(comma separated)</span>
+            </label>
+            <Input
+              placeholder="e.g. SaaS startup, business plan, MVP, funding"
+              value={secondaryKeywords}
+              onChange={(e) => setSecondaryKeywords(e.target.value)}
               className="h-11"
             />
           </div>
