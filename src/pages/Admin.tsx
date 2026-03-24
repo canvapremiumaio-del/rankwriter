@@ -23,13 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle } from "lucide-react";
+import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle, ShieldCheck, ShieldOff } from "lucide-react";
 
 interface UserData {
   id: string;
   email: string | null;
   created_at: string;
   plan: "basic" | "pro";
+  isAdmin: boolean;
 }
 
 const Admin = () => {
@@ -42,8 +43,8 @@ const Admin = () => {
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [search, setSearch] = useState("");
   const [updatingPlan, setUpdatingPlan] = useState<string | null>(null);
+  const [updatingRole, setUpdatingRole] = useState<string | null>(null);
 
-  // Check admin role
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
@@ -70,7 +71,6 @@ const Admin = () => {
     checkAdmin();
   }, [user, authLoading, navigate]);
 
-  // Fetch users
   useEffect(() => {
     if (!isAdmin) return;
     fetchUsers();
@@ -78,28 +78,29 @@ const Admin = () => {
 
   const fetchUsers = async () => {
     setLoadingUsers(true);
-    const { data: profiles, error: profilesError } = await supabase
-      .from("profiles")
-      .select("id, email, created_at")
-      .order("created_at", { ascending: false });
+    const [profilesRes, plansRes, rolesRes] = await Promise.all([
+      supabase.from("profiles").select("id, email, created_at").order("created_at", { ascending: false }),
+      supabase.from("user_plans").select("user_id, plan"),
+      supabase.from("user_roles").select("user_id, role"),
+    ]);
 
-    if (profilesError) {
+    if (profilesRes.error) {
       toast({ title: "Error", description: "Failed to load users", variant: "destructive" });
       setLoadingUsers(false);
       return;
     }
 
-    const { data: plans } = await supabase
-      .from("user_plans")
-      .select("user_id, plan");
+    const planMap = new Map(plansRes.data?.map((p) => [p.user_id, p.plan]) || []);
+    const adminSet = new Set(
+      rolesRes.data?.filter((r) => r.role === "admin").map((r) => r.user_id) || []
+    );
 
-    const planMap = new Map(plans?.map((p) => [p.user_id, p.plan]) || []);
-
-    const merged: UserData[] = (profiles || []).map((p) => ({
+    const merged: UserData[] = (profilesRes.data || []).map((p) => ({
       id: p.id,
       email: p.email,
       created_at: p.created_at,
       plan: (planMap.get(p.id) as "basic" | "pro") || "basic",
+      isAdmin: adminSet.has(p.id),
     }));
 
     setUsers(merged);
@@ -124,6 +125,47 @@ const Admin = () => {
     setUpdatingPlan(null);
   };
 
+  const handleToggleAdmin = async (userId: string, currentlyAdmin: boolean) => {
+    if (userId === user?.id) {
+      toast({ title: "Error", description: "You cannot change your own admin role", variant: "destructive" });
+      return;
+    }
+
+    setUpdatingRole(userId);
+
+    if (currentlyAdmin) {
+      // Remove admin role — set back to 'user'
+      const { error } = await supabase
+        .from("user_roles")
+        .update({ role: "user" as any })
+        .eq("user_id", userId)
+        .eq("role", "admin");
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to remove admin role", variant: "destructive" });
+      } else {
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, isAdmin: false } : u)));
+        toast({ title: "Success", description: "Admin role removed" });
+      }
+    } else {
+      // Make admin — upsert admin role
+      const { error } = await supabase
+        .from("user_roles")
+        .upsert(
+          { user_id: userId, role: "admin" as any },
+          { onConflict: "user_id" }
+        );
+
+      if (error) {
+        toast({ title: "Error", description: "Failed to make admin", variant: "destructive" });
+      } else {
+        setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, isAdmin: true } : u)));
+        toast({ title: "Success", description: "User is now an admin" });
+      }
+    }
+    setUpdatingRole(null);
+  };
+
   const handleDeleteUser = async (userId: string) => {
     if (userId === user?.id) {
       toast({ title: "Error", description: "You cannot delete yourself", variant: "destructive" });
@@ -133,7 +175,6 @@ const Admin = () => {
     const confirmed = window.confirm("Are you sure you want to delete this user? This cannot be undone.");
     if (!confirmed) return;
 
-    // Delete profile (cascade will handle related data)
     const { error } = await supabase.from("profiles").delete().eq("id", userId);
 
     if (error) {
@@ -147,6 +188,8 @@ const Admin = () => {
   const filteredUsers = users.filter(
     (u) => !search || u.email?.toLowerCase().includes(search.toLowerCase())
   );
+
+  const adminCount = users.filter((u) => u.isAdmin).length;
 
   if (authLoading || checking) {
     return (
@@ -171,12 +214,12 @@ const Admin = () => {
             <h1 className="text-2xl font-bold text-foreground tracking-tight" style={{ fontFamily: "var(--font-display)" }}>
               Admin Panel
             </h1>
-            <p className="text-sm text-muted-foreground">Manage users and their subscription plans</p>
+            <p className="text-sm text-muted-foreground">Manage users, roles, and subscription plans</p>
           </div>
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
           <div className="bg-card rounded-xl border border-border p-5">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-violet-100">
@@ -210,6 +253,17 @@ const Admin = () => {
               </div>
             </div>
           </div>
+          <div className="bg-card rounded-xl border border-border p-5">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-rose-100">
+                <ShieldCheck className="w-5 h-5 text-rose-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{adminCount}</p>
+                <p className="text-xs text-muted-foreground">Admins</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Search */}
@@ -235,6 +289,7 @@ const Admin = () => {
                 <TableRow>
                   <TableHead>Email</TableHead>
                   <TableHead>Joined</TableHead>
+                  <TableHead>Role</TableHead>
                   <TableHead>Plan</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -242,7 +297,7 @@ const Admin = () => {
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={4} className="text-center text-muted-foreground py-10">
+                    <TableCell colSpan={5} className="text-center text-muted-foreground py-10">
                       No users found
                     </TableCell>
                   </TableRow>
@@ -259,6 +314,22 @@ const Admin = () => {
                       </TableCell>
                       <TableCell className="text-muted-foreground text-sm">
                         {new Date(u.created_at).toLocaleDateString()}
+                      </TableCell>
+                      <TableCell>
+                        <Badge
+                          variant="secondary"
+                          className={`text-[10px] font-semibold uppercase cursor-default ${
+                            u.isAdmin
+                              ? "bg-rose-100 text-rose-700 border border-rose-200"
+                              : "bg-muted text-muted-foreground"
+                          }`}
+                        >
+                          {u.isAdmin ? (
+                            <><ShieldCheck className="w-3 h-3 mr-1" /> Admin</>
+                          ) : (
+                            "User"
+                          )}
+                        </Badge>
                       </TableCell>
                       <TableCell>
                         <Select
@@ -286,15 +357,33 @@ const Admin = () => {
                         </Select>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteUser(u.id)}
-                          disabled={u.id === user?.id}
-                          className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleToggleAdmin(u.id, u.isAdmin)}
+                            disabled={u.id === user?.id || updatingRole === u.id}
+                            title={u.isAdmin ? "Remove admin" : "Make admin"}
+                            className={u.isAdmin ? "text-rose-600 hover:text-rose-700 hover:bg-rose-50" : "text-muted-foreground hover:text-foreground"}
+                          >
+                            {updatingRole === u.id ? (
+                              <Loader2 className="w-4 h-4 animate-spin" />
+                            ) : u.isAdmin ? (
+                              <ShieldOff className="w-4 h-4" />
+                            ) : (
+                              <ShieldCheck className="w-4 h-4" />
+                            )}
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteUser(u.id)}
+                            disabled={u.id === user?.id}
+                            className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))
