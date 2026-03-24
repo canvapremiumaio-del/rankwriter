@@ -8,14 +8,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Sparkles, Loader2 } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Sparkles, Loader2, Crown } from "lucide-react";
 
 interface BlogInputFormProps {
   onGenerate: (topic: string, tone: string, wordCount: string) => void;
   isLoading: boolean;
+  isPro?: boolean;
 }
 
-const BlogInputForm = ({ onGenerate, isLoading }: BlogInputFormProps) => {
+const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormProps) => {
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
@@ -31,6 +33,21 @@ const BlogInputForm = ({ onGenerate, isLoading }: BlogInputFormProps) => {
       onSubmit={handleSubmit}
       className="bg-card rounded-2xl shadow-card p-6 md:p-8 space-y-5 border border-border"
     >
+      {/* Plan indicator */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-muted-foreground">Generation Mode</span>
+        <Badge
+          variant="secondary"
+          className={`text-[10px] font-semibold uppercase ${
+            isPro
+              ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
+              : "bg-muted text-muted-foreground"
+          }`}
+        >
+          {isPro ? "⭐ Pro — Advanced SEO" : "Basic — Simple Blog"}
+        </Badge>
+      </div>
+
       <div>
         <label className="block text-sm font-medium text-foreground mb-2">
           Topic / Keyword
@@ -55,9 +72,16 @@ const BlogInputForm = ({ onGenerate, isLoading }: BlogInputFormProps) => {
             <SelectContent>
               <SelectItem value="professional">Professional</SelectItem>
               <SelectItem value="casual">Casual</SelectItem>
-              <SelectItem value="seo-optimized">SEO Optimized</SelectItem>
+              <SelectItem value="seo-optimized">
+                SEO Optimized {!isPro && "🔒"}
+              </SelectItem>
             </SelectContent>
           </Select>
+          {!isPro && tone === "seo-optimized" && (
+            <p className="text-[11px] text-amber-600 mt-1 flex items-center gap-1">
+              <Crown className="w-3 h-3" /> Pro tone — basic output will be used
+            </p>
+          )}
         </div>
 
         <div>
@@ -71,11 +95,29 @@ const BlogInputForm = ({ onGenerate, isLoading }: BlogInputFormProps) => {
             <SelectContent>
               <SelectItem value="500">~500 words</SelectItem>
               <SelectItem value="1000">~1,000 words</SelectItem>
-              <SelectItem value="1500">~1,500 words</SelectItem>
+              <SelectItem value="1500">
+                ~1,500 words {!isPro && "🔒"}
+              </SelectItem>
+              {isPro && <SelectItem value="2000">~2,000 words</SelectItem>}
+              {isPro && <SelectItem value="2500">~2,500 words</SelectItem>}
             </SelectContent>
           </Select>
+          {!isPro && (wordCount === "1500" || wordCount === "2000" || wordCount === "2500") && (
+            <p className="text-[11px] text-amber-600 mt-1 flex items-center gap-1">
+              <Crown className="w-3 h-3" /> Pro feature — output limited to ~1,000 words
+            </p>
+          )}
         </div>
       </div>
+
+      {/* Pro features note */}
+      {!isPro && (
+        <div className="bg-muted/50 rounded-lg p-3 border border-border">
+          <p className="text-xs text-muted-foreground">
+            <span className="font-medium text-foreground">Basic Plan:</span> Simple blog structure. Upgrade to Pro for SEO keywords, meta descriptions, advanced formatting, and export options.
+          </p>
+        </div>
+      )}
 
       <Button
         type="submit"
