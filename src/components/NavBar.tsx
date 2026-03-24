@@ -21,6 +21,7 @@ const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; lab
 const NavBar = () => {
   const { user, signOut } = useAuth();
   const { plan } = useUserPlan();
+  const { isAdmin } = useAdmin();
   const location = useLocation();
 
   if (!user) return null;
