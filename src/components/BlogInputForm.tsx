@@ -22,7 +22,8 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
-  const [keywords, setKeywords] = useState("");
+  const [primaryKeyword, setPrimaryKeyword] = useState("");
+  const [secondaryKeywords, setSecondaryKeywords] = useState("");
   const [outline, setOutline] = useState("");
   const [instructions, setInstructions] = useState("");
 
