@@ -13,7 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Sparkles, Loader2, Crown } from "lucide-react";
 
 interface BlogInputFormProps {
-  onGenerate: (topic: string, tone: string, wordCount: string, keywords?: string, outline?: string, instructions?: string) => void;
+  onGenerate: (topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) => void;
   isLoading: boolean;
   isPro?: boolean;
 }
