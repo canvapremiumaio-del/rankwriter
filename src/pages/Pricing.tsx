@@ -4,9 +4,17 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Check, X, Loader2 } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Check, X, Loader2, MessageCircle, Tag } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 const plans = [
   {
@@ -43,26 +51,30 @@ const plans = [
 const Pricing = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { plan: currentPlan, updatePlan, loading: planLoading } = useUserPlan();
+  const { plan: currentPlan, loading: planLoading } = useUserPlan();
   const { toast } = useToast();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro" | null>(null);
+  const [coupon, setCoupon] = useState("");
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
   }, [user, authLoading, navigate]);
 
-  const handleSelect = async (planId: "basic" | "pro") => {
+  const handleSelect = (planId: "basic" | "pro") => {
     if (planId === currentPlan) return;
-    const error = await updatePlan(planId);
-    if (error) {
-      toast({ title: "Error", description: "Failed to update plan.", variant: "destructive" });
-    } else {
-      toast({
-        title: planId === "pro" ? "Welcome to Pro! 🎉" : "Plan changed",
-        description: planId === "pro"
-          ? "You now have access to all premium features."
-          : "You've switched to the Basic plan.",
-      });
-    }
+    setSelectedPlan(planId);
+    setCoupon("");
+    setDialogOpen(true);
+  };
+
+  const handleCouponSubmit = () => {
+    toast({
+      title: "Coupon Submitted",
+      description: "Your coupon code has been submitted. Our team will verify and activate your plan shortly.",
+    });
+    setDialogOpen(false);
+    setCoupon("");
   };
 
   if (authLoading || planLoading) {
@@ -103,6 +115,11 @@ const Pricing = () => {
                     Recommended
                   </Badge>
                 )}
+                {isActive && (
+                  <Badge className="absolute -top-3 right-4 bg-emerald-500 text-white px-3">
+                    Active
+                  </Badge>
+                )}
                 <h2 className="text-xl font-bold text-foreground mb-1">{p.name}</h2>
                 <p className="text-sm text-muted-foreground mb-4">{p.description}</p>
                 <div className="flex items-baseline gap-1 mb-6">
@@ -131,13 +148,77 @@ const Pricing = () => {
                   disabled={isActive}
                   onClick={() => handleSelect(p.id)}
                 >
-                  {isActive ? "Current Plan" : `Select ${p.name}`}
+                  {isActive ? "✓ Current Plan" : `Get ${p.name}`}
                 </Button>
               </div>
             );
           })}
         </div>
+
+        {/* Contact info */}
+        <div className="mt-10 text-center bg-muted/50 rounded-xl border border-border p-6">
+          <MessageCircle className="w-6 h-6 text-primary mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">
+            To upgrade or change your plan, enter a coupon code or contact the admin at{" "}
+            <a href="mailto:admin@aiblogwriter.pro" className="text-primary font-medium hover:underline">
+              admin@aiblogwriter.pro
+            </a>
+          </p>
+        </div>
       </div>
+
+      {/* Coupon / Contact Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Activate {selectedPlan === "pro" ? "Pro" : "Basic"} Plan</DialogTitle>
+            <DialogDescription>
+              Enter a coupon code to activate this plan, or contact the admin to get one.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4 pt-2">
+            {/* Coupon input */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground flex items-center gap-2">
+                <Tag className="w-4 h-4" />
+                Coupon Code
+              </label>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Enter coupon code..."
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value)}
+                  className="flex-1"
+                />
+                <Button onClick={handleCouponSubmit} disabled={!coupon.trim()}>
+                  Apply
+                </Button>
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3">
+              <div className="h-px flex-1 bg-border" />
+              <span className="text-xs text-muted-foreground">OR</span>
+              <div className="h-px flex-1 bg-border" />
+            </div>
+
+            {/* Contact admin */}
+            <div className="bg-muted/50 rounded-lg p-4 text-center">
+              <p className="text-sm text-muted-foreground mb-2">
+                Don't have a coupon? Contact admin to get started.
+              </p>
+              <Button variant="outline" asChild>
+                <a href="mailto:admin@aiblogwriter.pro" className="gap-2">
+                  <MessageCircle className="w-4 h-4" />
+                  Contact Admin
+                </a>
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
