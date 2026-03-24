@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
+import { supabase } from "@/integrations/supabase/client";
 import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -56,6 +57,7 @@ const Pricing = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro" | null>(null);
   const [coupon, setCoupon] = useState("");
+  const [redeeming, setRedeeming] = useState(false);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
@@ -68,13 +70,26 @@ const Pricing = () => {
     setDialogOpen(true);
   };
 
-  const handleCouponSubmit = () => {
-    toast({
-      title: "Coupon Submitted",
-      description: "Your coupon code has been submitted. Our team will verify and activate your plan shortly.",
-    });
-    setDialogOpen(false);
-    setCoupon("");
+  const handleCouponSubmit = async () => {
+    if (!coupon.trim()) return;
+    setRedeeming(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("redeem-coupon", {
+        body: { code: coupon.trim() },
+      });
+      if (error || data?.error) {
+        toast({ title: "Error", description: data?.error || "Failed to redeem coupon", variant: "destructive" });
+      } else {
+        toast({ title: "Plan Activated! 🎉", description: `Your plan has been upgraded to ${data.plan}.` });
+        setDialogOpen(false);
+        setCoupon("");
+        // Reload to reflect new plan
+        window.location.reload();
+      }
+    } catch {
+      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
+    }
+    setRedeeming(false);
   };
 
   if (authLoading || planLoading) {
@@ -191,8 +206,8 @@ const Pricing = () => {
                   onChange={(e) => setCoupon(e.target.value)}
                   className="flex-1"
                 />
-                <Button onClick={handleCouponSubmit} disabled={!coupon.trim()}>
-                  Apply
+                <Button onClick={handleCouponSubmit} disabled={!coupon.trim() || redeeming}>
+                  {redeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
                 </Button>
               </div>
             </div>

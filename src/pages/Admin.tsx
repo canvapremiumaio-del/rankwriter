@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import NavBar from "@/components/NavBar";
+import AdminCoupons from "@/components/AdminCoupons";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -299,6 +300,11 @@ const Admin = () => {
               </TableBody>
             </Table>
           )}
+        </div>
+
+        {/* Coupon Management */}
+        <div className="mt-8">
+          <AdminCoupons />
         </div>
       </div>
     </div>
