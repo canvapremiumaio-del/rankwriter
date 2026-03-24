@@ -303,15 +303,21 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 h-11"
-          />
+        {/* Search + Add User */}
+        <div className="flex gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 h-11"
+            />
+          </div>
+          <Button onClick={() => setAddDialogOpen(true)} className="gap-2 h-11">
+            <UserPlus className="w-4 h-4" />
+            Add User
+          </Button>
         </div>
 
         {/* Users Table */}
