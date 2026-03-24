@@ -110,8 +110,10 @@ const Admin = () => {
     setUpdatingPlan(userId);
     const { error } = await supabase
       .from("user_plans")
-      .update({ plan: newPlan, updated_at: new Date().toISOString() })
-      .eq("user_id", userId);
+      .upsert(
+        { user_id: userId, plan: newPlan, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      );
 
     if (error) {
       toast({ title: "Error", description: "Failed to update plan", variant: "destructive" });
