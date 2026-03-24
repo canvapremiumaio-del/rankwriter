@@ -4,12 +4,14 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Pencil, Check } from "lucide-react";
+import { Pencil, Check, Lock, Crown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface BlogOutputProps {
   article: BlogArticle;
   onArticleChange?: (updated: BlogArticle) => void;
   editable?: boolean;
+  isPro?: boolean;
 }
 
 const Section = ({
@@ -40,7 +42,27 @@ const Section = ({
   </div>
 );
 
-const BlogOutput = ({ article, onArticleChange, editable = false }: BlogOutputProps) => {
+const LockedSection = ({ label }: { label: string }) => {
+  const navigate = useNavigate();
+  return (
+    <div className="space-y-2">
+      <h3 className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+        {label}
+      </h3>
+      <div className="bg-muted/40 rounded-lg p-4 border border-border border-dashed flex items-center justify-between">
+        <div className="flex items-center gap-2 text-muted-foreground text-sm">
+          <Lock className="w-4 h-4" />
+          <span>Upgrade to Pro to unlock {label.toLowerCase()}</span>
+        </div>
+        <Button variant="ghost" size="sm" className="text-xs text-primary gap-1" onClick={() => navigate("/pricing")}>
+          <Crown className="w-3 h-3" /> Upgrade
+        </Button>
+      </div>
+    </div>
+  );
+};
+
+const BlogOutput = ({ article, onArticleChange, editable = false, isPro = true }: BlogOutputProps) => {
   const [editingField, setEditingField] = useState<string | null>(null);
   const [keywordInput, setKeywordInput] = useState("");
 
@@ -75,35 +97,43 @@ const BlogOutput = ({ article, onArticleChange, editable = false }: BlogOutputPr
         )}
       </Section>
 
-      <Section label="Meta Description" editing={editingField === "metaDescription"} onToggleEdit={() => toggleEdit("metaDescription")} editable={editable}>
-        {editingField === "metaDescription" ? (
-          <Textarea
-            value={article.metaDescription}
-            onChange={(e) => update("metaDescription", e.target.value)}
-            rows={3}
-          />
-        ) : (
-          <p className="text-muted-foreground text-sm leading-relaxed bg-muted/50 rounded-lg p-4 border border-border">
-            {article.metaDescription}
-          </p>
-        )}
-      </Section>
+      {isPro ? (
+        <Section label="Meta Description" editing={editingField === "metaDescription"} onToggleEdit={() => toggleEdit("metaDescription")} editable={editable}>
+          {editingField === "metaDescription" ? (
+            <Textarea
+              value={article.metaDescription}
+              onChange={(e) => update("metaDescription", e.target.value)}
+              rows={3}
+            />
+          ) : (
+            <p className="text-muted-foreground text-sm leading-relaxed bg-muted/50 rounded-lg p-4 border border-border">
+              {article.metaDescription}
+            </p>
+          )}
+        </Section>
+      ) : (
+        <LockedSection label="Meta Description" />
+      )}
 
-      <Section label="Keywords" editing={editingField === "keywords"} onToggleEdit={() => (editingField === "keywords" ? saveKeywords() : toggleEdit("keywords"))} editable={editable}>
-        {editingField === "keywords" ? (
-          <Input
-            value={keywordInput}
-            onChange={(e) => setKeywordInput(e.target.value)}
-            placeholder="keyword1, keyword2, keyword3"
-          />
-        ) : (
-          <div className="flex flex-wrap gap-2">
-            {article.keywords.map((kw) => (
-              <Badge key={kw} variant="secondary" className="text-xs font-medium">{kw}</Badge>
-            ))}
-          </div>
-        )}
-      </Section>
+      {isPro ? (
+        <Section label="Keywords" editing={editingField === "keywords"} onToggleEdit={() => (editingField === "keywords" ? saveKeywords() : toggleEdit("keywords"))} editable={editable}>
+          {editingField === "keywords" ? (
+            <Input
+              value={keywordInput}
+              onChange={(e) => setKeywordInput(e.target.value)}
+              placeholder="keyword1, keyword2, keyword3"
+            />
+          ) : (
+            <div className="flex flex-wrap gap-2">
+              {article.keywords.map((kw) => (
+                <Badge key={kw} variant="secondary" className="text-xs font-medium">{kw}</Badge>
+              ))}
+            </div>
+          )}
+        </Section>
+      ) : (
+        <LockedSection label="SEO Keywords" />
+      )}
 
       <Section label="Outline" editing={editingField === "outline"} onToggleEdit={() => toggleEdit("outline")} editable={editable}>
         {editingField === "outline" ? (

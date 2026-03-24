@@ -83,11 +83,11 @@ const Generator = () => {
       <NavBar />
       <div className="max-w-3xl mx-auto px-4 pb-20">
         <BlogHeader />
-        <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} />
+        <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} isPro={isPro} />
 
         {article && (
           <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <BlogOutput article={article} onArticleChange={setArticle} editable />
+            <BlogOutput article={article} onArticleChange={setArticle} editable isPro={isPro} />
             <BlogActions article={article} isPro={isPro} />
           </div>
         )}
