@@ -1,43 +1,64 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2 } from "lucide-react";
+import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search } from "lucide-react";
 
 const features = [
   {
     icon: Sparkles,
     title: "AI-Powered Writing",
-    description: "Generate complete, SEO-optimized blog articles in seconds using advanced AI models.",
+    description: "Generate complete, human-like blog articles in seconds — natural tone, no robotic phrasing.",
     bg: "bg-[hsl(var(--accent))]",
     iconColor: "text-[hsl(var(--primary))]",
   },
   {
-    icon: FileDown,
-    title: "Export Anywhere",
-    description: "Download your articles as polished PDF or Word documents, ready to publish.",
-    bg: "bg-sky-50",
-    iconColor: "text-sky-600",
+    icon: Search,
+    title: "SEO Keywords & Meta",
+    description: "Auto-generated SEO keywords, meta descriptions, and tags to boost your Google rankings.",
+    bg: "bg-violet-50",
+    iconColor: "text-violet-600",
   },
   {
     icon: LayoutList,
     title: "Smart Structuring",
-    description: "Auto-generated outlines, meta descriptions, keywords, and proper heading hierarchy.",
+    description: "Professional H1, H2, H3 heading hierarchy with structured outlines and clean formatting.",
     bg: "bg-emerald-50",
     iconColor: "text-emerald-600",
   },
   {
+    icon: Wand2,
+    title: "Humanize Article",
+    description: "One-click AI rewrite to make any article sound more natural, engaging, and human-written.",
+    bg: "bg-pink-50",
+    iconColor: "text-pink-600",
+  },
+  {
+    icon: FileDown,
+    title: "Export to PDF",
+    description: "Download your articles as professionally formatted PDF documents, ready to publish.",
+    bg: "bg-sky-50",
+    iconColor: "text-sky-600",
+  },
+  {
+    icon: FileText,
+    title: "Export to Word",
+    description: "One-click Word document export for easy editing and sharing with your team.",
+    bg: "bg-orange-50",
+    iconColor: "text-orange-600",
+  },
+  {
     icon: Zap,
-    title: "Lightning Fast",
-    description: "Get your first draft in under 30 seconds. No more staring at blank pages.",
+    title: "Up to 2,500 Words",
+    description: "Generate longer, more detailed articles with extended word counts on the Pro plan.",
     bg: "bg-amber-50",
     iconColor: "text-amber-600",
   },
   {
-    icon: Shield,
-    title: "SEO Optimized",
-    description: "Built-in keyword research, meta tags, and search engine best practices.",
-    bg: "bg-rose-50",
-    iconColor: "text-rose-600",
+    icon: Copy,
+    title: "Copy & Share",
+    description: "Instantly copy your generated article to clipboard — paste anywhere, anytime.",
+    bg: "bg-teal-50",
+    iconColor: "text-teal-600",
   },
   {
     icon: Globe,
