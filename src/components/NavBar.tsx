@@ -34,6 +34,7 @@ const NavBar = () => {
           <NavLink to="/generate" icon={PenLine} label="Generate" active={location.pathname === "/generate"} />
           <NavLink to="/history" icon={History} label="History" active={location.pathname === "/history"} />
           <NavLink to="/pricing" icon={CreditCard} label="Pricing" active={location.pathname === "/pricing"} />
+          {isAdmin && <NavLink to="/admin" icon={Shield} label="Admin" active={location.pathname === "/admin"} />}
         </div>
         <div className="flex items-center gap-3">
           <Badge variant="secondary" className="text-[10px] font-semibold uppercase hidden sm:flex">

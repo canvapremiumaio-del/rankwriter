@@ -31,6 +31,7 @@ const App = () => (
             <Route path="/history" element={<History />} />
             <Route path="/pricing" element={<Pricing />} />
             <Route path="/article/:id" element={<ArticleDetail />} />
+            <Route path="/admin" element={<Admin />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
