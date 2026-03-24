@@ -276,9 +276,9 @@ const Landing = () => {
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">RankWriter</span>
+            <span className="text-sm font-semibold text-gray-700">Rank Writer</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 RankWriter. All rights reserved.</p>
+          <p className="text-xs text-gray-400">© 2026 Rank Writer. All rights reserved.</p>
         </div>
       </footer>
     </div>
