@@ -23,7 +23,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle, ShieldCheck, ShieldOff } from "lucide-react";
+import { Loader2, Trash2, Shield, Users, Search, Crown, UserCircle, ShieldCheck, ShieldOff, UserPlus } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 
 interface UserData {
   id: string;
@@ -44,6 +51,13 @@ const Admin = () => {
   const [search, setSearch] = useState("");
   const [updatingPlan, setUpdatingPlan] = useState<string | null>(null);
   const [updatingRole, setUpdatingRole] = useState<string | null>(null);
+
+  // Add user dialog state
+  const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newPlan, setNewPlan] = useState<"basic" | "pro">("basic");
+  const [addingUser, setAddingUser] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -185,6 +199,29 @@ const Admin = () => {
     }
   };
 
+  const handleAddUser = async () => {
+    if (!newEmail.trim() || !newPassword.trim()) return;
+    setAddingUser(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("admin-create-user", {
+        body: { email: newEmail.trim(), password: newPassword, plan: newPlan },
+      });
+      if (error || data?.error) {
+        toast({ title: "Error", description: data?.error || "Failed to create user", variant: "destructive" });
+      } else {
+        toast({ title: "User Created! ✅", description: `${newEmail} has been added successfully.` });
+        setAddDialogOpen(false);
+        setNewEmail("");
+        setNewPassword("");
+        setNewPlan("basic");
+        fetchUsers();
+      }
+    } catch {
+      toast({ title: "Error", description: "Something went wrong", variant: "destructive" });
+    }
+    setAddingUser(false);
+  };
+
   const filteredUsers = users.filter(
     (u) => !search || u.email?.toLowerCase().includes(search.toLowerCase())
   );
@@ -266,15 +303,21 @@ const Admin = () => {
           </div>
         </div>
 
-        {/* Search */}
-        <div className="relative mb-4">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder="Search by email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="pl-10 h-11"
-          />
+        {/* Search + Add User */}
+        <div className="flex gap-3 mb-4">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by email..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="pl-10 h-11"
+            />
+          </div>
+          <Button onClick={() => setAddDialogOpen(true)} className="gap-2 h-11">
+            <UserPlus className="w-4 h-4" />
+            Add User
+          </Button>
         </div>
 
         {/* Users Table */}
@@ -398,6 +441,56 @@ const Admin = () => {
           <AdminCoupons />
         </div>
       </div>
+
+      {/* Add User Dialog */}
+      <Dialog open={addDialogOpen} onOpenChange={setAddDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Add New User</DialogTitle>
+            <DialogDescription>Create a new user account with email and password.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 pt-2">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Email</label>
+              <Input
+                type="email"
+                placeholder="user@example.com"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Password</label>
+              <Input
+                type="password"
+                placeholder="Min 6 characters"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+              />
+            </div>
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-foreground">Plan</label>
+              <Select value={newPlan} onValueChange={(v) => setNewPlan(v as "basic" | "pro")}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="basic">Basic</SelectItem>
+                  <SelectItem value="pro">Pro</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <Button
+              className="w-full"
+              onClick={handleAddUser}
+              disabled={!newEmail.trim() || !newPassword.trim() || addingUser}
+            >
+              {addingUser ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <UserPlus className="w-4 h-4 mr-2" />}
+              Create User
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
