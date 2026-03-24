@@ -32,7 +32,7 @@ const Dashboard = () => {
   const { plan, loading: planLoading } = useUserPlan();
 
   useEffect(() => {
-    if (!authLoading && !user) navigate("/auth", { replace: true });
+    if (!authLoading && !user) navigate("/landing", { replace: true });
   }, [user, authLoading, navigate]);
 
   if (authLoading || planLoading) {

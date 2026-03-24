@@ -10,6 +10,7 @@ import Auth from "./pages/Auth";
 import History from "./pages/History";
 import Pricing from "./pages/Pricing";
 import ArticleDetail from "./pages/ArticleDetail";
+import Landing from "./pages/Landing";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +24,7 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Dashboard />} />
+            <Route path="/landing" element={<Landing />} />
             <Route path="/generate" element={<Generator />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/history" element={<History />} />
