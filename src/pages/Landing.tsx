@@ -140,17 +140,17 @@ const Landing = () => {
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center py-20 md:py-32">
           <Badge className="mb-6 bg-[hsl(172,50%,94%)] text-[hsl(172,66%,30%)] border-[hsl(172,50%,85%)] hover:bg-[hsl(172,50%,94%)] text-sm font-medium px-4 py-1.5">
-            ✨ Powered by Advanced AI
+            ✨ Smart SEO Content Platform
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
             Write & Rank with
             <br />
             <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] bg-clip-text text-transparent">
-              AI Precision
+              SEO Precision
             </span>
           </h1>
           <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
-            Generate professional, SEO-optimized blog posts with AI-powered keyword research,
+            Create professional, SEO-optimized blog posts with built-in keyword research,
             structured outlines, and export-ready formatting.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
