@@ -207,12 +207,12 @@ const Pricing = () => {
             {/* Contact admin */}
             <div className="bg-muted/50 rounded-lg p-4 text-center">
               <p className="text-sm text-muted-foreground mb-2">
-                Don't have a coupon? Contact admin to get started.
+                Don't have a coupon? Contact us on WhatsApp.
               </p>
               <Button variant="outline" asChild>
-                <a href="mailto:admin@aiblogwriter.pro" className="gap-2">
+                <a href="https://wa.me/923059694651" target="_blank" rel="noopener noreferrer" className="gap-2">
                   <MessageCircle className="w-4 h-4" />
-                  Contact Admin
+                  WhatsApp: +92 305 9694651
                 </a>
               </Button>
             </div>
