@@ -52,7 +52,7 @@ const testimonials = [
   {
     name: "Sarah Chen",
     role: "Content Strategist",
-    text: "RankWriter cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
+    text: "Rank Writer cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
     rating: 5,
     avatar: "SC",
     color: "bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)]",
@@ -95,7 +95,7 @@ const Landing = () => {
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-gray-900 text-lg tracking-tight">
-              Rank<span className="text-[hsl(172,66%,40%)]">Writer</span>
+              Rank <span className="text-[hsl(172,66%,40%)]">Writer</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
@@ -255,7 +255,7 @@ const Landing = () => {
                 Ready to Write & Rank?
               </h2>
               <p className="text-white/80 text-lg mb-8 max-w-lg mx-auto">
-                Join thousands of creators using RankWriter to produce high-quality, SEO-optimized content effortlessly.
+                Join thousands of creators using Rank Writer to produce high-quality, SEO-optimized content effortlessly.
               </p>
               <Button
                 size="lg"
@@ -276,9 +276,9 @@ const Landing = () => {
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">RankWriter</span>
+            <span className="text-sm font-semibold text-gray-700">Rank Writer</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 RankWriter. All rights reserved.</p>
+          <p className="text-xs text-gray-400">© 2026 Rank Writer. All rights reserved.</p>
         </div>
       </footer>
     </div>

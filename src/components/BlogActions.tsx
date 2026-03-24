@@ -1,12 +1,15 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, FileDown, FileText, Lock } from "lucide-react";
+import { Copy, FileDown, FileText, Lock, Sparkles, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { BlogArticle } from "@/types/blog";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 interface BlogActionsProps {
   article: BlogArticle;
   isPro?: boolean;
+  onArticleChange?: (updated: BlogArticle) => void;
 }
 
 function buildPlainText(article: BlogArticle): string {
@@ -28,9 +31,10 @@ function buildPlainText(article: BlogArticle): string {
   ].join("\n");
 }
 
-const BlogActions = ({ article, isPro = true }: BlogActionsProps) => {
+const BlogActions = ({ article, isPro = true, onArticleChange }: BlogActionsProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const [isHumanizing, setIsHumanizing] = useState(false);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(buildPlainText(article));
@@ -40,9 +44,36 @@ const BlogActions = ({ article, isPro = true }: BlogActionsProps) => {
   const handleUpgradePrompt = () => {
     toast({
       title: "Pro Feature 🔒",
-      description: "Upgrade to Pro to unlock export features.",
+      description: "Upgrade to Pro to unlock this feature.",
     });
     navigate("/pricing");
+  };
+
+  const handleHumanize = async () => {
+    if (!isPro) return handleUpgradePrompt();
+    setIsHumanizing(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("humanize-article", {
+        body: { article: article.article },
+      });
+      if (error) throw error;
+      if (data?.article && onArticleChange) {
+        onArticleChange({ ...article, article: data.article });
+        toast({
+          title: "Article humanized! ✨",
+          description: "Your article has been rewritten to sound more natural.",
+        });
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast({
+        title: "Humanize failed",
+        description: err.message || "Something went wrong. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsHumanizing(false);
+    }
   };
 
   const handleDownloadPdf = async () => {
@@ -108,6 +139,21 @@ const BlogActions = ({ article, isPro = true }: BlogActionsProps) => {
       <Button variant="outline" onClick={handleCopy} className="gap-2">
         <Copy className="w-4 h-4" />
         Copy Article
+      </Button>
+      <Button
+        variant="outline"
+        onClick={handleHumanize}
+        disabled={isHumanizing}
+        className="gap-2"
+      >
+        {isHumanizing ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : isPro ? (
+          <Sparkles className="w-4 h-4" />
+        ) : (
+          <Lock className="w-4 h-4" />
+        )}
+        {isHumanizing ? "Improving content..." : "Humanize Article"}
       </Button>
       <Button variant="outline" onClick={handleDownloadPdf} className="gap-2">
         {isPro ? <FileDown className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
