@@ -11,6 +11,7 @@ import History from "./pages/History";
 import Pricing from "./pages/Pricing";
 import ArticleDetail from "./pages/ArticleDetail";
 import Landing from "./pages/Landing";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
