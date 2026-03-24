@@ -34,7 +34,8 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
       topic.trim(),
       tone,
       wordCount,
-      isPro ? keywords.trim() : undefined,
+      isPro ? primaryKeyword.trim() : undefined,
+      isPro ? secondaryKeywords.trim() : undefined,
       isPro ? outline.trim() : undefined,
       isPro ? instructions.trim() : undefined
     );
