@@ -256,7 +256,7 @@ const Admin = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="bg-card rounded-xl border border-border p-5">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-violet-100">
