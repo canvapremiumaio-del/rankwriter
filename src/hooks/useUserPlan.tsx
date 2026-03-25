@@ -6,7 +6,7 @@ export type PlanType = "basic" | "pro" | "plus";
 
 export const useUserPlan = () => {
   const { user } = useAuth();
-  const [plan, setPlan] = useState<PlanType>("basic");
+  const [plan, setPlan] = useState<PlanType | null>(null);
   const [expiresAt, setExpiresAt] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -91,8 +91,9 @@ export const useUserPlan = () => {
     return error;
   };
 
-  const isPro = plan === "pro" || plan === "plus";
-  const isPlus = plan === "plus";
+  const resolvedPlan: PlanType = plan ?? "basic";
+  const isPro = resolvedPlan === "pro" || resolvedPlan === "plus";
+  const isPlus = resolvedPlan === "plus";
 
-  return { plan, isPro, isPlus, loading, updatePlan, expiresAt };
+  return { plan: resolvedPlan, isPro, isPlus, loading, updatePlan, expiresAt };
 };
