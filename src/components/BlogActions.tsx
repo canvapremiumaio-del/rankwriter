@@ -72,14 +72,20 @@ const BlogActions = ({
       const { data, error } = await supabase.functions.invoke("humanize-article", {
         body: { article: article.article },
       });
-      if (error) throw error;
-      if (data?.article && onArticleChange) {
-        onArticleChange({ ...article, article: data.article });
-        toast({
-          title: "Article humanized! ✨",
-          description: "Your article has been rewritten to sound more natural.",
-        });
+      if (error) {
+        console.error("humanize invoke error:", error);
+        throw new Error(typeof error === "object" && error.message ? error.message : "Humanize request failed");
       }
+      if (!data?.article) {
+        throw new Error("No humanized content received. Please try again.");
+      }
+      if (onArticleChange) {
+        onArticleChange({ ...article, article: data.article });
+      }
+      toast({
+        title: "Article humanized! ✨",
+        description: "Your article has been rewritten to sound more natural.",
+      });
     } catch (err: any) {
       console.error(err);
       toast({
@@ -99,11 +105,17 @@ const BlogActions = ({
       const { data, error } = await supabase.functions.invoke("generate-variations", {
         body: { article: article.article, topic, primaryKeyword, secondaryKeywords },
       });
-      if (error) throw error;
-      if (data?.variations && onVariationsChange) {
-        onVariationsChange(data.variations);
-        toast({ title: "Variations ready! 🎯", description: `${data.variations.length} alternative versions generated.` });
+      if (error) {
+        console.error("variations invoke error:", error);
+        throw new Error(typeof error === "object" && error.message ? error.message : "Variations request failed");
       }
+      if (!data?.variations || !Array.isArray(data.variations) || data.variations.length === 0) {
+        throw new Error("No variations received. Please try again.");
+      }
+      if (onVariationsChange) {
+        onVariationsChange(data.variations);
+      }
+      toast({ title: "Variations ready! 🎯", description: `${data.variations.length} alternative versions generated.` });
     } catch (err: any) {
       console.error(err);
       toast({ title: "Failed", description: err.message || "Something went wrong.", variant: "destructive" });
@@ -114,38 +126,44 @@ const BlogActions = ({
 
   const handleDownloadPdf = async () => {
     if (!isPro) return handleUpgradePrompt("Pro");
-    const { default: jsPDF } = await import("jspdf");
-    const doc = new jsPDF();
-    const margin = 15;
-    const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
-    let y = margin;
+    try {
+      const { default: jsPDF } = await import("jspdf");
+      const doc = new jsPDF();
+      const margin = 15;
+      const pageWidth = doc.internal.pageSize.getWidth() - margin * 2;
+      let y = margin;
 
-    const addText = (text: string, fontSize: number, bold = false) => {
-      doc.setFontSize(fontSize);
-      doc.setFont("helvetica", bold ? "bold" : "normal");
-      const lines = doc.splitTextToSize(text, pageWidth);
-      for (const line of lines) {
-        if (y > 280) {
-          doc.addPage();
-          y = margin;
+      const addText = (text: string, fontSize: number, bold = false) => {
+        doc.setFontSize(fontSize);
+        doc.setFont("helvetica", bold ? "bold" : "normal");
+        const lines = doc.splitTextToSize(text, pageWidth);
+        for (const line of lines) {
+          if (y > 280) {
+            doc.addPage();
+            y = margin;
+          }
+          doc.text(line, margin, y);
+          y += fontSize * 0.5;
         }
-        doc.text(line, margin, y);
-        y += fontSize * 0.5;
-      }
-      y += 4;
-    };
+        y += 4;
+      };
 
-    addText(article.title, 18, true);
-    addText("Meta Description:", 10, true);
-    addText(article.metaDescription, 10);
-    addText("Keywords: " + article.keywords.join(", "), 10);
-    addText("Outline:", 12, true);
-    addText(article.outline, 10);
-    addText(article.article, 11);
-    addText("Conclusion:", 12, true);
-    addText(article.conclusion, 11);
+      addText(article.title, 18, true);
+      addText("Meta Description:", 10, true);
+      addText(article.metaDescription, 10);
+      addText("Keywords: " + article.keywords.join(", "), 10);
+      addText("Outline:", 12, true);
+      addText(article.outline, 10);
+      addText(article.article, 11);
+      addText("Conclusion:", 12, true);
+      addText(article.conclusion, 11);
 
-    doc.save(`${article.title.slice(0, 40)}.pdf`);
+      doc.save(`${article.title.slice(0, 40)}.pdf`);
+      toast({ title: "PDF downloaded! 📄", description: "Your article has been saved as PDF." });
+    } catch (err: any) {
+      console.error("PDF download error:", err);
+      toast({ title: "PDF download failed", description: err.message || "Something went wrong.", variant: "destructive" });
+    }
   };
 
   const handleDownloadDoc = () => {
