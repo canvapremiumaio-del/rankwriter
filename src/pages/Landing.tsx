@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search } from "lucide-react";
+import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search, BarChart3, Layers } from "lucide-react";
 
 const features = [
   {
@@ -45,6 +45,30 @@ const features = [
     description: "Download articles as professionally formatted PDF or Word documents, ready to publish.",
     bg: "bg-sky-50",
     iconColor: "text-sky-600",
+  },
+  {
+    icon: BarChart3,
+    title: "SEO Score Analysis",
+    description: "Get AI-powered SEO scoring (0–100) with actionable improvement suggestions for every article.",
+    bg: "bg-violet-50",
+    iconColor: "text-violet-600",
+    badge: "PLUS",
+  },
+  {
+    icon: Search,
+    title: "AI Keyword Suggestions",
+    description: "Auto-generate primary, secondary, and long-tail keywords before writing your article.",
+    bg: "bg-purple-50",
+    iconColor: "text-purple-600",
+    badge: "PLUS",
+  },
+  {
+    icon: Layers,
+    title: "Multiple Article Variations",
+    description: "Generate 2–3 different versions of every article with unique wording and structure.",
+    bg: "bg-fuchsia-50",
+    iconColor: "text-fuchsia-600",
+    badge: "PLUS",
   },
   {
     icon: Zap,
@@ -218,8 +242,15 @@ const Landing = () => {
               key={f.title}
               className="group bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100/80 transition-all duration-300 hover:-translate-y-1"
             >
-              <div className={`p-3 rounded-xl ${f.bg} w-fit mb-4 group-hover:scale-110 transition-transform`}>
-                <f.icon className={`w-6 h-6 ${f.iconColor}`} />
+              <div className="flex items-start justify-between mb-4">
+                <div className={`p-3 rounded-xl ${f.bg} w-fit group-hover:scale-110 transition-transform`}>
+                  <f.icon className={`w-6 h-6 ${f.iconColor}`} />
+                </div>
+                {"badge" in f && f.badge && (
+                  <Badge className="bg-violet-100 text-violet-700 border-violet-200 hover:bg-violet-100 text-[10px]">
+                    {f.badge}
+                  </Badge>
+                )}
               </div>
               <h3 className="font-semibold text-gray-900 text-lg mb-2">{f.title}</h3>
               <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>

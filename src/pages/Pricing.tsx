@@ -34,15 +34,16 @@ const plans = [
       { text: "Save & reuse templates", included: false },
       { text: "Humanize article", included: false },
       { text: "SEO keywords & meta", included: false },
-      { text: "Advanced H1/H2/H3 structure", included: false },
       { text: "Export to PDF & Word", included: false },
+      { text: "SEO Score analysis", included: false },
+      { text: "Keyword suggestions", included: false },
+      { text: "Multiple article variations", included: false },
     ],
   },
   {
     id: "pro" as const,
     name: "Pro",
     price: "$10",
-    recommended: true,
     description: "Full SEO toolkit for professional content creators.",
     features: [
       { text: "AI blog generation", included: true },
@@ -56,6 +57,29 @@ const plans = [
       { text: "Up to 2,500 words", included: true },
       { text: "Humanize article (AI rewrite)", included: true },
       { text: "Export to PDF & Word", included: true },
+      { text: "SEO Score analysis", included: false },
+      { text: "Keyword suggestions", included: false },
+      { text: "Multiple article variations", included: false },
+    ],
+  },
+  {
+    id: "plus" as const,
+    name: "Plus",
+    price: "$15",
+    recommended: true,
+    description: "Advanced SEO + AI features for power users.",
+    features: [
+      { text: "Everything in Pro", included: true },
+      { text: "SEO Score (content grading 0–100)", included: true },
+      { text: "AI Keyword Suggestions", included: true },
+      { text: "Multiple article variations (2–3)", included: true },
+      { text: "Primary & secondary keywords", included: true },
+      { text: "Custom outline & instructions", included: true },
+      { text: "Save & reuse templates", included: true },
+      { text: "Up to 2,500 words", included: true },
+      { text: "Humanize article (AI rewrite)", included: true },
+      { text: "Export to PDF & Word", included: true },
+      { text: "Advanced H1/H2/H3 structure", included: true },
       { text: "Priority quality output", included: true },
     ],
   },
@@ -67,7 +91,7 @@ const Pricing = () => {
   const { plan: currentPlan, loading: planLoading } = useUserPlan();
   const { toast } = useToast();
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro" | null>(null);
+  const [selectedPlan, setSelectedPlan] = useState<"basic" | "pro" | "plus" | null>(null);
   const [coupon, setCoupon] = useState("");
   const [redeeming, setRedeeming] = useState(false);
 
@@ -75,7 +99,7 @@ const Pricing = () => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
   }, [user, authLoading, navigate]);
 
-  const handleSelect = (planId: "basic" | "pro") => {
+  const handleSelect = (planId: "basic" | "pro" | "plus") => {
     if (planId === currentPlan) return;
     setSelectedPlan(planId);
     setCoupon("");
@@ -95,7 +119,6 @@ const Pricing = () => {
         toast({ title: "Plan Activated! 🎉", description: `Your plan has been upgraded to ${data.plan}.` });
         setDialogOpen(false);
         setCoupon("");
-        // Reload to reflect new plan
         window.location.reload();
       }
     } catch {
@@ -115,7 +138,7 @@ const Pricing = () => {
   return (
     <div className="min-h-screen bg-background">
       <NavBar />
-      <div className="max-w-3xl mx-auto px-4 pb-20 pt-8">
+      <div className="max-w-5xl mx-auto px-4 pb-20 pt-8">
         <div className="text-center mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
             Choose Your Plan
@@ -125,7 +148,7 @@ const Pricing = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((p) => {
             const isActive = currentPlan === p.id;
             return (
@@ -133,13 +156,13 @@ const Pricing = () => {
                 key={p.id}
                 className={`bg-card rounded-2xl border-2 p-6 md:p-8 relative transition-shadow ${
                   p.recommended
-                    ? "border-primary shadow-md"
+                    ? "border-violet-500 shadow-lg shadow-violet-500/10"
                     : "border-border shadow-sm"
                 }`}
               >
                 {p.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground px-3">
-                    Recommended
+                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-violet-500 text-white px-3">
+                    Best Value
                   </Badge>
                 )}
                 {isActive && (
@@ -198,14 +221,13 @@ const Pricing = () => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Activate {selectedPlan === "pro" ? "Pro" : "Basic"} Plan</DialogTitle>
+            <DialogTitle>Activate {selectedPlan === "plus" ? "Plus" : selectedPlan === "pro" ? "Pro" : "Basic"} Plan</DialogTitle>
             <DialogDescription>
               Enter a coupon code to activate this plan, or contact the admin to get one.
             </DialogDescription>
           </DialogHeader>
 
           <div className="space-y-4 pt-2">
-            {/* Coupon input */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground flex items-center gap-2">
                 <Tag className="w-4 h-4" />
@@ -224,14 +246,12 @@ const Pricing = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-border" />
               <span className="text-xs text-muted-foreground">OR</span>
               <div className="h-px flex-1 bg-border" />
             </div>
 
-            {/* Contact admin */}
             <div className="bg-muted/50 rounded-lg p-4 text-center">
               <p className="text-sm text-muted-foreground mb-2">
                 Don't have a coupon? Contact us on WhatsApp.

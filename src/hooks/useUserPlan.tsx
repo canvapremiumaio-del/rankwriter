@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-export type PlanType = "basic" | "pro";
+export type PlanType = "basic" | "pro" | "plus";
 
 export const useUserPlan = () => {
   const { user } = useAuth();
@@ -39,7 +39,7 @@ export const useUserPlan = () => {
           const planExpiry = (data as any).expires_at as string | null;
           const expired = planExpiry && new Date(planExpiry) < new Date();
 
-          if (expired && data.plan === "pro") {
+          if (expired && (data.plan === "pro" || data.plan === "plus")) {
             await supabase
               .from("user_plans")
               .update({ plan: "basic", updated_at: new Date().toISOString() } as any)
@@ -55,7 +55,6 @@ export const useUserPlan = () => {
             }
           }
         } else {
-          // Self-heal missing row
           await supabase
             .from("user_plans")
             .upsert(
@@ -92,7 +91,8 @@ export const useUserPlan = () => {
     return error;
   };
 
-  const isPro = plan === "pro";
+  const isPro = plan === "pro" || plan === "plus";
+  const isPlus = plan === "plus";
 
-  return { plan, isPro, loading, updatePlan, expiresAt };
+  return { plan, isPro, isPlus, loading, updatePlan, expiresAt };
 };
