@@ -99,12 +99,18 @@ const BlogActions = ({
   };
 
   const handleGenerateVariations = async () => {
-    if (!isPlus) return handleUpgradePrompt("Plus");
+    console.log("Generate Variations clicked. isPlus:", isPlus, "plan check passed");
+    if (!isPlus) {
+      console.log("User is not Plus, redirecting to pricing");
+      return handleUpgradePrompt("Plus");
+    }
     setIsGeneratingVariations(true);
     try {
+      console.log("Calling generate-variations edge function...");
       const { data, error } = await supabase.functions.invoke("generate-variations", {
         body: { article: article.article, topic, primaryKeyword, secondaryKeywords },
       });
+      console.log("generate-variations response:", { data, error });
       if (error) {
         console.error("variations invoke error:", error);
         throw new Error(typeof error === "object" && error.message ? error.message : "Variations request failed");
