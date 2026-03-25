@@ -33,6 +33,7 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false, isPlus = false }:
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
+  const [customWordCount, setCustomWordCount] = useState("");
   const [primaryKeyword, setPrimaryKeyword] = useState("");
   const [secondaryKeywords, setSecondaryKeywords] = useState("");
   const [outline, setOutline] = useState("");
@@ -49,10 +50,11 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false, isPlus = false }:
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!topic.trim()) return;
+    const finalWordCount = customWordCount.trim() || wordCount;
     onGenerate(
       topic.trim(),
       tone,
-      wordCount,
+      finalWordCount,
       isPro ? primaryKeyword.trim() : undefined,
       isPro ? secondaryKeywords.trim() : undefined,
       isPro ? outline.trim() : undefined,
@@ -233,9 +235,9 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false, isPlus = false }:
             <label className="block text-sm font-medium text-foreground mb-2">
               Word Count
             </label>
-            <Select value={wordCount} onValueChange={setWordCount}>
+            <Select value={customWordCount ? "" : wordCount} onValueChange={(v) => { setWordCount(v); setCustomWordCount(""); }}>
               <SelectTrigger className="h-12">
-                <SelectValue />
+                <SelectValue placeholder={customWordCount ? `Custom: ${customWordCount}` : undefined} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="500">~500 words</SelectItem>
@@ -247,11 +249,25 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false, isPlus = false }:
                 {isPro && <SelectItem value="2500">~2,500 words</SelectItem>}
               </SelectContent>
             </Select>
-            {!isPro && (wordCount === "1500" || wordCount === "2000" || wordCount === "2500") && (
+            {!isPro && (wordCount === "1500" || wordCount === "2000" || wordCount === "2500") && !customWordCount && (
               <p className="text-[11px] text-amber-600 mt-1 flex items-center gap-1">
                 <Crown className="w-3 h-3" /> Pro feature — output limited to ~1,000 words
               </p>
             )}
+            <div className="mt-2">
+              <Input
+                type="number"
+                min={100}
+                max={5000}
+                placeholder="e.g. 600, 750, 1200"
+                value={customWordCount}
+                onChange={(e) => setCustomWordCount(e.target.value)}
+                className="h-10"
+              />
+              <p className="text-[11px] text-muted-foreground mt-1">
+                Custom Word Count (optional) — overrides the dropdown selection
+              </p>
+            </div>
           </div>
         </div>
 
