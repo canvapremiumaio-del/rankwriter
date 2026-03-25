@@ -5,19 +5,26 @@ import BlogInputForm from "@/components/BlogInputForm";
 import BlogOutput from "@/components/BlogOutput";
 import BlogActions from "@/components/BlogActions";
 import NavBar from "@/components/NavBar";
-import type { BlogArticle } from "@/types/blog";
+import type { BlogArticle, SeoScore, ArticleVariation } from "@/types/blog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
+import SeoScoreCard from "@/components/SeoScoreCard";
+import ArticleVariations from "@/components/ArticleVariations";
 
 const Generator = () => {
   const [article, setArticle] = useState<BlogArticle | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [seoScore, setSeoScore] = useState<SeoScore | null>(null);
+  const [variations, setVariations] = useState<ArticleVariation[]>([]);
+  const [lastGenParams, setLastGenParams] = useState<{ topic: string; primaryKeyword: string; secondaryKeywords: string }>({
+    topic: "", primaryKeyword: "", secondaryKeywords: "",
+  });
   const { toast } = useToast();
   const { user, loading: authLoading } = useAuth();
-  const { plan, isPro, loading: planLoading } = useUserPlan();
+  const { plan, isPro, isPlus, loading: planLoading } = useUserPlan();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,6 +34,8 @@ const Generator = () => {
   const handleGenerate = async (topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) => {
     setIsLoading(true);
     setArticle(null);
+    setSeoScore(null);
+    setVariations([]);
 
     try {
       const { data, error } = await supabase.functions.invoke("generate-blog", {
@@ -37,6 +46,7 @@ const Generator = () => {
 
       const generated = data as BlogArticle;
       setArticle(generated);
+      setLastGenParams({ topic, primaryKeyword: primaryKeyword || "", secondaryKeywords: secondaryKeywords || "" });
 
       toast({
         title: "Article generated! ✨",
@@ -83,12 +93,38 @@ const Generator = () => {
       <NavBar />
       <div className="max-w-3xl mx-auto px-4 pb-20">
         <BlogHeader />
-        <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} isPro={isPro} />
+        <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} isPro={isPro} isPlus={isPlus} />
 
         {article && (
           <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
             <BlogOutput article={article} onArticleChange={setArticle} editable isPro={isPro} />
-            <BlogActions article={article} isPro={isPro} onArticleChange={setArticle} />
+            
+            {/* SEO Score - Plus only */}
+            <SeoScoreCard
+              article={article}
+              isPlus={isPlus}
+              seoScore={seoScore}
+              onSeoScoreChange={setSeoScore}
+              primaryKeyword={lastGenParams.primaryKeyword}
+              secondaryKeywords={lastGenParams.secondaryKeywords}
+            />
+
+            <BlogActions
+              article={article}
+              isPro={isPro}
+              isPlus={isPlus}
+              onArticleChange={setArticle}
+              topic={lastGenParams.topic}
+              primaryKeyword={lastGenParams.primaryKeyword}
+              secondaryKeywords={lastGenParams.secondaryKeywords}
+              variations={variations}
+              onVariationsChange={setVariations}
+            />
+
+            {/* Variations - Plus only */}
+            {variations.length > 0 && (
+              <ArticleVariations variations={variations} />
+            )}
           </div>
         )}
       </div>

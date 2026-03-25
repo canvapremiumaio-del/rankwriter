@@ -1,15 +1,21 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Copy, FileDown, FileText, Lock, Sparkles, Loader2 } from "lucide-react";
+import { Copy, FileDown, FileText, Lock, Sparkles, Loader2, Layers } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import type { BlogArticle } from "@/types/blog";
+import type { BlogArticle, ArticleVariation } from "@/types/blog";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 interface BlogActionsProps {
   article: BlogArticle;
   isPro?: boolean;
+  isPlus?: boolean;
   onArticleChange?: (updated: BlogArticle) => void;
+  topic?: string;
+  primaryKeyword?: string;
+  secondaryKeywords?: string;
+  variations?: ArticleVariation[];
+  onVariationsChange?: (v: ArticleVariation[]) => void;
 }
 
 function buildPlainText(article: BlogArticle): string {
@@ -31,26 +37,36 @@ function buildPlainText(article: BlogArticle): string {
   ].join("\n");
 }
 
-const BlogActions = ({ article, isPro = true, onArticleChange }: BlogActionsProps) => {
+const BlogActions = ({
+  article,
+  isPro = true,
+  isPlus = false,
+  onArticleChange,
+  topic,
+  primaryKeyword,
+  secondaryKeywords,
+  onVariationsChange,
+}: BlogActionsProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
   const [isHumanizing, setIsHumanizing] = useState(false);
+  const [isGeneratingVariations, setIsGeneratingVariations] = useState(false);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(buildPlainText(article));
     toast({ title: "Copied!", description: "Article copied to clipboard." });
   };
 
-  const handleUpgradePrompt = () => {
+  const handleUpgradePrompt = (feature: string = "Pro") => {
     toast({
-      title: "Pro Feature 🔒",
-      description: "Upgrade to Pro to unlock this feature.",
+      title: `${feature} Feature 🔒`,
+      description: `Upgrade to ${feature} to unlock this feature.`,
     });
     navigate("/pricing");
   };
 
   const handleHumanize = async () => {
-    if (!isPro) return handleUpgradePrompt();
+    if (!isPro) return handleUpgradePrompt("Pro");
     setIsHumanizing(true);
     try {
       const { data, error } = await supabase.functions.invoke("humanize-article", {
@@ -76,8 +92,28 @@ const BlogActions = ({ article, isPro = true, onArticleChange }: BlogActionsProp
     }
   };
 
+  const handleGenerateVariations = async () => {
+    if (!isPlus) return handleUpgradePrompt("Plus");
+    setIsGeneratingVariations(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-variations", {
+        body: { article: article.article, topic, primaryKeyword, secondaryKeywords },
+      });
+      if (error) throw error;
+      if (data?.variations && onVariationsChange) {
+        onVariationsChange(data.variations);
+        toast({ title: "Variations ready! 🎯", description: `${data.variations.length} alternative versions generated.` });
+      }
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Failed", description: err.message || "Something went wrong.", variant: "destructive" });
+    } finally {
+      setIsGeneratingVariations(false);
+    }
+  };
+
   const handleDownloadPdf = async () => {
-    if (!isPro) return handleUpgradePrompt();
+    if (!isPro) return handleUpgradePrompt("Pro");
     const { default: jsPDF } = await import("jspdf");
     const doc = new jsPDF();
     const margin = 15;
@@ -113,7 +149,7 @@ const BlogActions = ({ article, isPro = true, onArticleChange }: BlogActionsProp
   };
 
   const handleDownloadDoc = () => {
-    if (!isPro) return handleUpgradePrompt();
+    if (!isPro) return handleUpgradePrompt("Pro");
     const html = `
 <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40">
 <head><meta charset="utf-8"><title>${article.title}</title></head>
@@ -162,6 +198,21 @@ const BlogActions = ({ article, isPro = true, onArticleChange }: BlogActionsProp
       <Button variant="outline" onClick={handleDownloadDoc} className="gap-2">
         {isPro ? <FileText className="w-4 h-4" /> : <Lock className="w-4 h-4" />}
         Download Word
+      </Button>
+      <Button
+        variant="outline"
+        onClick={handleGenerateVariations}
+        disabled={isGeneratingVariations}
+        className="gap-2"
+      >
+        {isGeneratingVariations ? (
+          <Loader2 className="w-4 h-4 animate-spin" />
+        ) : isPlus ? (
+          <Layers className="w-4 h-4" />
+        ) : (
+          <Lock className="w-4 h-4" />
+        )}
+        {isGeneratingVariations ? "Generating..." : "Generate Variations"}
       </Button>
     </div>
   );

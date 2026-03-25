@@ -10,9 +10,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, Loader2, Crown, Save, FileText, Trash2 } from "lucide-react";
+import { Sparkles, Loader2, Crown, Save, FileText, Trash2, Search, Lock } from "lucide-react";
 import { useTemplates, type Template } from "@/hooks/useTemplates";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -24,9 +26,10 @@ interface BlogInputFormProps {
   onGenerate: (topic: string, tone: string, wordCount: string, primaryKeyword?: string, secondaryKeywords?: string, outline?: string, instructions?: string) => void;
   isLoading: boolean;
   isPro?: boolean;
+  isPlus?: boolean;
 }
 
-const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormProps) => {
+const BlogInputForm = ({ onGenerate, isLoading, isPro = false, isPlus = false }: BlogInputFormProps) => {
   const [topic, setTopic] = useState("");
   const [tone, setTone] = useState("professional");
   const [wordCount, setWordCount] = useState("1000");
@@ -37,9 +40,11 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [templateName, setTemplateName] = useState("");
   const [savingTemplate, setSavingTemplate] = useState(false);
+  const [suggestingKeywords, setSuggestingKeywords] = useState(false);
 
   const { templates, saveTemplate, deleteTemplate } = useTemplates();
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -92,6 +97,52 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
     toast({ title: "Deleted", description: `Template "${name}" removed.` });
   };
 
+  const handleSuggestKeywords = async () => {
+    if (!isPlus) {
+      toast({ title: "Plus Feature 🔒", description: "Upgrade to Plus to unlock keyword suggestions." });
+      navigate("/pricing");
+      return;
+    }
+    if (!topic.trim()) {
+      toast({ title: "Enter a topic", description: "Please enter a topic first to get keyword suggestions.", variant: "destructive" });
+      return;
+    }
+    setSuggestingKeywords(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("suggest-keywords", {
+        body: { topic: topic.trim() },
+      });
+      if (error) throw error;
+      if (data?.primaryKeyword) {
+        setPrimaryKeyword(data.primaryKeyword);
+      }
+      if (data?.secondaryKeywords) {
+        const allSecondary = [
+          ...(data.secondaryKeywords || []),
+          ...(data.longTailKeywords || []),
+        ].join(", ");
+        setSecondaryKeywords(allSecondary);
+      }
+      toast({ title: "Keywords suggested! 🔍", description: "AI-generated keywords have been filled in." });
+    } catch (err: any) {
+      toast({ title: "Failed", description: err.message || "Could not generate keyword suggestions.", variant: "destructive" });
+    } finally {
+      setSuggestingKeywords(false);
+    }
+  };
+
+  const planLabel = isPlus
+    ? "💎 Plus — Advanced SEO + AI"
+    : isPro
+      ? "⭐ Pro — Advanced SEO"
+      : "Basic — Simple Blog";
+
+  const planBadgeClass = isPlus
+    ? "bg-violet-500/15 text-violet-600 border border-violet-500/30"
+    : isPro
+      ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
+      : "bg-muted text-muted-foreground";
+
   return (
     <>
       <form
@@ -103,17 +154,13 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
           <span className="text-sm font-medium text-muted-foreground">Generation Mode</span>
           <Badge
             variant="secondary"
-            className={`text-[10px] font-semibold uppercase ${
-              isPro
-                ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
-                : "bg-muted text-muted-foreground"
-            }`}
+            className={`text-[10px] font-semibold uppercase ${planBadgeClass}`}
           >
-            {isPro ? "⭐ Pro — Advanced SEO" : "Basic — Simple Blog"}
+            {planLabel}
           </Badge>
         </div>
 
-        {/* Template selector for Pro */}
+        {/* Template selector for Pro+ */}
         {isPro && templates.length > 0 && (
           <div className="space-y-2">
             <label className="block text-sm font-medium text-foreground flex items-center gap-1.5">
@@ -227,9 +274,33 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
               </Button>
             </div>
             <div>
-              <label className="block text-sm font-medium text-foreground mb-2">
-                Primary Keyword
-              </label>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-medium text-foreground">
+                  Primary Keyword
+                </label>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleSuggestKeywords}
+                  disabled={suggestingKeywords}
+                  className={`text-xs gap-1 ${isPlus ? "text-violet-600 hover:text-violet-700 hover:bg-violet-500/10" : "text-muted-foreground"}`}
+                >
+                  {suggestingKeywords ? (
+                    <Loader2 className="w-3 h-3 animate-spin" />
+                  ) : isPlus ? (
+                    <Search className="w-3 h-3" />
+                  ) : (
+                    <Lock className="w-3 h-3" />
+                  )}
+                  {suggestingKeywords ? "Suggesting..." : "Suggest Keywords"}
+                  {!isPlus && (
+                    <Badge variant="secondary" className="text-[8px] bg-violet-500/15 text-violet-600 border border-violet-500/30 ml-1">
+                      PLUS
+                    </Badge>
+                  )}
+                </Button>
+              </div>
               <Input
                 placeholder="e.g. how to start a SaaS business"
                 value={primaryKeyword}
@@ -273,11 +344,11 @@ const BlogInputForm = ({ onGenerate, isLoading, isPro = false }: BlogInputFormPr
           </div>
         )}
 
-        {/* Pro features note */}
+        {/* Basic plan note */}
         {!isPro && (
           <div className="bg-muted/50 rounded-lg p-3 border border-border">
             <p className="text-xs text-muted-foreground">
-              <span className="font-medium text-foreground">Basic Plan:</span> Simple blog structure. Upgrade to Pro for SEO keywords, meta descriptions, advanced formatting, and export options.
+              <span className="font-medium text-foreground">Basic Plan:</span> Simple blog structure. Upgrade to Pro for SEO keywords, meta descriptions, advanced formatting, and export options. Upgrade to Plus for SEO scoring, keyword suggestions, and article variations.
             </p>
           </div>
         )}
