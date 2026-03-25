@@ -38,6 +38,9 @@ serve(async (req) => {
 
     const { email, password, plan } = await req.json();
     if (!email || !password) throw new Error("Email and password are required");
+    if (String(password).length < 6) throw new Error("Password must be at least 6 characters");
+
+    const selectedPlan = plan === "pro" || plan === "plus" ? plan : "basic";
 
     // Create user with service role
     const adminClient = createClient(supabaseUrl, serviceRoleKey);
@@ -47,23 +50,48 @@ serve(async (req) => {
       email_confirm: true,
     });
 
-    if (createError) throw createError;
+    let userId = newUser.user?.id;
+    let alreadyExisted = false;
 
-    // Update plan — use upsert to handle race condition with trigger
-    if (plan && plan !== "basic" && newUser.user) {
-      // Small delay to let trigger create the row first
-      await new Promise((r) => setTimeout(r, 500));
-      
-      await adminClient
-        .from("user_plans")
-        .upsert(
-          { user_id: newUser.user.id, plan, updated_at: new Date().toISOString() },
-          { onConflict: "user_id" }
-        );
+    if (createError) {
+      if (createError.code !== "email_exists") throw createError;
+
+      const { data: listedUsers, error: listError } = await adminClient.auth.admin.listUsers({
+        page: 1,
+        perPage: 1000,
+      });
+      if (listError) throw listError;
+
+      const existingUser = listedUsers.users.find(
+        (u) => u.email?.toLowerCase() === String(email).toLowerCase()
+      );
+      if (!existingUser) throw createError;
+
+      userId = existingUser.id;
+      alreadyExisted = true;
     }
 
+    if (!userId) throw new Error("Failed to resolve user account");
+
+    const now = new Date().toISOString();
+    const [profileRes, roleRes, planRes] = await Promise.all([
+      adminClient
+        .from("profiles")
+        .upsert({ id: userId, email: String(email) }, { onConflict: "id" }),
+      adminClient
+        .from("user_roles")
+        .upsert({ user_id: userId, role: "user" }, { onConflict: "user_id" }),
+      adminClient
+        .from("user_plans")
+        .upsert({ user_id: userId, plan: selectedPlan, updated_at: now }, { onConflict: "user_id" }),
+    ]);
+
+    if (profileRes.error) throw profileRes.error;
+    if (roleRes.error) throw roleRes.error;
+    if (planRes.error) throw planRes.error;
+
     return new Response(
-      JSON.stringify({ success: true, user: { id: newUser.user?.id, email } }),
+      JSON.stringify({ success: true, existing: alreadyExisted, user: { id: userId, email } }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
