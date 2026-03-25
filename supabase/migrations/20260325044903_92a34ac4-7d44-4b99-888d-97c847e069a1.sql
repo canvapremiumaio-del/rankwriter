@@ -1,0 +1,1 @@
+ALTER TYPE public.app_plan ADD VALUE IF NOT EXISTS 'plus';
