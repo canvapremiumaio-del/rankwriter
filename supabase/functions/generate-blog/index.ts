@@ -6,6 +6,22 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+function getWordCountBlock(wordCount: string) {
+  return `
+Word Count Requirement:
+- Target word count: ${wordCount}
+- The article length should be very close to the target (±5% variation allowed)
+
+Instructions:
+- Do not generate significantly shorter or longer content
+- Adjust detail level to match the required word count
+- If needed:
+  • Expand explanations to increase length
+  • Keep sentences concise to reduce length
+
+Ensure the final article stays within the expected range.`;
+}
+
 function getBasicPrompt(topic: string, tone: string, wordCount: string) {
   return `You are a blog writer.
 
@@ -21,7 +37,7 @@ Requirements:
 - Add personal touches and relatable examples
 
 Tone: ${tone}
-Word count: approximately ${wordCount} words.
+${getWordCountBlock(wordCount)}
 
 Return the result using the return_blog_article function.`;
 }
@@ -67,7 +83,7 @@ Write a high-quality, detailed article:
 - Include relatable examples and anecdotes
 - Maintain SEO optimization without keyword stuffing
 - Tone: ${tone}
-- Word count: approximately ${wordCount} words
+${getWordCountBlock(wordCount)}
 
 Add SEO elements:
 - Meta description (150-160 characters)
