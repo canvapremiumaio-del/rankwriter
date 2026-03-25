@@ -4,7 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+    "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
 serve(async (req) => {
@@ -49,12 +49,17 @@ serve(async (req) => {
 
     if (createError) throw createError;
 
-    // Update plan if not basic
+    // Update plan — use upsert to handle race condition with trigger
     if (plan && plan !== "basic" && newUser.user) {
+      // Small delay to let trigger create the row first
+      await new Promise((r) => setTimeout(r, 500));
+      
       await adminClient
         .from("user_plans")
-        .update({ plan, updated_at: new Date().toISOString() })
-        .eq("user_id", newUser.user.id);
+        .upsert(
+          { user_id: newUser.user.id, plan, updated_at: new Date().toISOString() },
+          { onConflict: "user_id" }
+        );
     }
 
     return new Response(
@@ -62,6 +67,7 @@ serve(async (req) => {
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (e) {
+    console.error("admin-create-user error:", e);
     return new Response(
       JSON.stringify({ error: e instanceof Error ? e.message : "Unknown error" }),
       { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
