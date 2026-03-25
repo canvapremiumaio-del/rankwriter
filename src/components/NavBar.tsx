@@ -20,7 +20,7 @@ const NavLink = ({ to, icon: Icon, label, active }: { to: string; icon: any; lab
 
 const NavBar = () => {
   const { user, signOut } = useAuth();
-  const { plan } = useUserPlan();
+  const { plan, loading: planLoading } = useUserPlan();
   const { isAdmin } = useAdmin();
   const location = useLocation();
 
@@ -37,7 +37,7 @@ const NavBar = () => {
           {isAdmin && <NavLink to="/admin" icon={Shield} label="Admin" active={location.pathname === "/admin"} />}
         </div>
         <div className="flex items-center gap-3">
-          <Badge
+          {!planLoading && <Badge
             variant="secondary"
             className={`text-[10px] font-semibold uppercase hidden sm:flex ${
               plan === "plus"
@@ -48,7 +48,7 @@ const NavBar = () => {
             }`}
           >
             {plan === "plus" ? "💎 Plus" : plan === "pro" ? "⭐ Pro" : "Basic"}
-          </Badge>
+          </Badge>}
           <span className="text-xs text-muted-foreground hidden md:block">{user.email}</span>
           <Button variant="ghost" size="sm" onClick={signOut} className="gap-2">
             <LogOut className="w-4 h-4" />
