@@ -4,7 +4,7 @@ import { useUserPlan } from "@/hooks/useUserPlan";
 import NavBar from "@/components/NavBar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText, Wand2, Copy, Globe } from "lucide-react";
+import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText, Wand2, Copy, Globe, BarChart3, Layers } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { differenceInDays, differenceInHours, differenceInMinutes, format } from "date-fns";
 
@@ -15,7 +15,7 @@ const features = [
     description: "Create complete, professional blog articles in seconds — natural tone, engaging style.",
     basic: "Simple blog structure",
     pro: "SEO-optimized content with detailed sections",
-    proOnly: false,
+    tier: "basic",
   },
   {
     icon: Search,
@@ -23,7 +23,7 @@ const features = [
     description: "Built-in keyword research, meta descriptions, and tags to boost your Google rankings.",
     basic: null,
     pro: "Full SEO toolkit with keywords, meta description & tags",
-    proOnly: true,
+    tier: "pro",
   },
   {
     icon: LayoutList,
@@ -31,7 +31,7 @@ const features = [
     description: "Professional H1, H2, H3 heading hierarchy with structured outlines and clean formatting.",
     basic: "Basic outline",
     pro: "H1, H2, H3 headings with professional structure",
-    proOnly: false,
+    tier: "basic",
   },
   {
     icon: Wand2,
@@ -39,7 +39,7 @@ const features = [
     description: "One-click rewrite to make any article sound more natural, engaging, and polished.",
     basic: null,
     pro: "Smart content enhancement & rewrite",
-    proOnly: true,
+    tier: "pro",
   },
   {
     icon: Zap,
@@ -47,7 +47,7 @@ const features = [
     description: "Create longer, more detailed articles with extended word counts.",
     basic: "Up to 1,000 words",
     pro: "Up to 2,500 words",
-    proOnly: false,
+    tier: "basic",
   },
   {
     icon: FileDown,
@@ -55,7 +55,7 @@ const features = [
     description: "Download articles as professionally formatted PDF documents.",
     basic: null,
     pro: "One-click PDF export",
-    proOnly: true,
+    tier: "pro",
   },
   {
     icon: FileText,
@@ -63,7 +63,7 @@ const features = [
     description: "Download articles as Word documents ready for editing.",
     basic: null,
     pro: "One-click Word export",
-    proOnly: true,
+    tier: "pro",
   },
   {
     icon: Copy,
@@ -71,7 +71,7 @@ const features = [
     description: "Instantly copy your article to clipboard — paste anywhere, anytime.",
     basic: "Copy to clipboard",
     pro: "Copy to clipboard",
-    proOnly: false,
+    tier: "basic",
   },
   {
     icon: Globe,
@@ -79,14 +79,38 @@ const features = [
     description: "From tech to travel, finance to food — write about anything with confidence.",
     basic: "All topics supported",
     pro: "All topics with priority quality",
-    proOnly: false,
+    tier: "basic",
+  },
+  {
+    icon: BarChart3,
+    title: "SEO Score Analysis",
+    description: "Get AI-powered SEO scoring (0–100) with actionable improvement suggestions.",
+    basic: null,
+    pro: null,
+    tier: "plus",
+  },
+  {
+    icon: Search,
+    title: "AI Keyword Suggestions",
+    description: "Auto-generate primary, secondary, and long-tail keywords for any topic.",
+    basic: null,
+    pro: null,
+    tier: "plus",
+  },
+  {
+    icon: Layers,
+    title: "Multiple Article Variations",
+    description: "Generate 2–3 different versions of every article with unique wording.",
+    basic: null,
+    pro: null,
+    tier: "plus",
   },
 ];
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
-  const { plan, isPro, loading: planLoading, expiresAt } = useUserPlan();
+  const { plan, isPro, isPlus, loading: planLoading, expiresAt } = useUserPlan();
 
   const expiryInfo = useMemo(() => {
     if (!expiresAt || !isPro) return null;
@@ -115,6 +139,21 @@ const Dashboard = () => {
     );
   }
 
+  const planBadgeClass = isPlus
+    ? "bg-violet-500/15 text-violet-600 border border-violet-500/30"
+    : isPro
+      ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
+      : "bg-muted text-muted-foreground";
+
+  const planLabel = isPlus ? "💎 Plus Plan" : isPro ? "⭐ Pro Plan" : "Basic Plan";
+
+  const isFeatureUnlocked = (tier: string) => {
+    if (tier === "basic") return true;
+    if (tier === "pro") return isPro;
+    if (tier === "plus") return isPlus;
+    return false;
+  };
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Beautiful gradient background */}
@@ -131,13 +170,9 @@ const Dashboard = () => {
         <section className="text-center py-16 md:py-24">
           <Badge
             variant="secondary"
-            className={`mb-4 text-xs font-semibold uppercase ${
-              isPro
-                ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
-                : "bg-muted text-muted-foreground"
-            }`}
+            className={`mb-4 text-xs font-semibold uppercase ${planBadgeClass}`}
           >
-            {isPro ? "⭐ Pro Plan" : "Basic Plan"}
+            {planLabel}
           </Badge>
           {expiryInfo && (
             <div className="mb-4 flex flex-col items-center gap-1">
@@ -161,23 +196,24 @@ const Dashboard = () => {
               Start Writing
               <ArrowRight className="w-4 h-4" />
             </Button>
-            {!isPro && (
+            {!isPlus && (
               <Button size="lg" variant="outline" onClick={() => navigate("/pricing")} className="h-12 px-8 text-base gap-2 bg-card/60 backdrop-blur-sm">
                 <Crown className="w-5 h-5" />
-                Upgrade to Pro
+                {isPro ? "Upgrade to Plus" : "Upgrade Plan"}
               </Button>
             )}
           </div>
         </section>
 
-        {/* Features comparison */}
+        {/* Features */}
         <section>
           <h2 className="text-xl font-bold text-foreground mb-6 text-center">
-            {isPro ? "Your Pro Features" : "Basic vs Pro Features"}
+            {isPlus ? "Your Plus Features" : isPro ? "Your Pro Features" : "Plan Features"}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map((f) => {
-              const locked = f.proOnly && !isPro;
+              const unlocked = isFeatureUnlocked(f.tier);
+              const locked = !unlocked;
               return (
                 <div
                   key={f.title}
@@ -187,17 +223,16 @@ const Dashboard = () => {
                       : "bg-card/70 border-border shadow-sm hover:shadow-md hover:bg-card/90"
                   }`}
                 >
-                  {/* Badge */}
-                  {f.proOnly && (
+                  {f.tier !== "basic" && (
                     <Badge
                       className={`absolute top-3 right-3 text-[10px] border-0 ${
-                        isPro
-                          ? "bg-amber-500/15 text-amber-600"
-                          : "bg-muted text-muted-foreground"
+                        f.tier === "plus"
+                          ? unlocked ? "bg-violet-500/15 text-violet-600" : "bg-muted text-muted-foreground"
+                          : unlocked ? "bg-amber-500/15 text-amber-600" : "bg-muted text-muted-foreground"
                       }`}
                     >
                       {locked ? <Lock className="w-3 h-3 mr-1" /> : null}
-                      PRO
+                      {f.tier === "plus" ? "PLUS" : "PRO"}
                     </Badge>
                   )}
 
@@ -213,8 +248,7 @@ const Dashboard = () => {
                     {f.description}
                   </p>
 
-                  {/* Plan-specific info */}
-                  {!isPro && !f.proOnly && f.basic && (
+                  {!isPro && f.tier === "basic" && f.basic && (
                     <div className="text-[11px] space-y-1">
                       <div className="flex items-center gap-1.5 text-muted-foreground">
                         <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
