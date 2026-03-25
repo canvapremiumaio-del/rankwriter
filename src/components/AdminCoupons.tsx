@@ -15,7 +15,7 @@ import { Loader2, Plus, Trash2, Tag, Copy } from "lucide-react";
 interface Coupon {
   id: string;
   code: string;
-  plan: "basic" | "pro";
+  plan: "basic" | "pro" | "plus";
   is_active: boolean;
   max_uses: number;
   used_count: number;
@@ -28,7 +28,7 @@ const AdminCoupons = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [loading, setLoading] = useState(true);
   const [newCode, setNewCode] = useState("");
-  const [newPlan, setNewPlan] = useState<"basic" | "pro">("pro");
+  const [newPlan, setNewPlan] = useState<"basic" | "pro" | "plus">("pro");
   const [newMaxUses, setNewMaxUses] = useState("1");
   const [newExpiry, setNewExpiry] = useState("");
   const [creating, setCreating] = useState(false);
@@ -141,11 +141,12 @@ const AdminCoupons = () => {
           </div>
           <div className="w-24">
             <label className="text-xs text-muted-foreground mb-1 block">Plan</label>
-            <Select value={newPlan} onValueChange={(v) => setNewPlan(v as "basic" | "pro")}>
+            <Select value={newPlan} onValueChange={(v) => setNewPlan(v as "basic" | "pro" | "plus")}>
               <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
               <SelectContent>
                 <SelectItem value="basic">Basic</SelectItem>
                 <SelectItem value="pro">Pro</SelectItem>
+                <SelectItem value="plus">Plus</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -213,7 +214,10 @@ const AdminCoupons = () => {
                     </div>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="secondary" className={c.plan === "pro" ? "bg-amber-500/15 text-amber-600" : ""}>
+                    <Badge variant="secondary" className={
+                      c.plan === "plus" ? "bg-violet-500/15 text-violet-600"
+                        : c.plan === "pro" ? "bg-amber-500/15 text-amber-600" : ""
+                    }>
                       {c.plan}
                     </Badge>
                   </TableCell>
