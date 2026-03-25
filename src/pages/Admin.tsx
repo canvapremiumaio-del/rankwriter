@@ -292,6 +292,17 @@ const Admin = () => {
           </div>
           <div className="bg-card rounded-xl border border-border p-5">
             <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-violet-100">
+                <Crown className="w-5 h-5 text-violet-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{users.filter((u) => u.plan === "plus").length}</p>
+                <p className="text-xs text-muted-foreground">Plus Users</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-card rounded-xl border border-border p-5">
+            <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-rose-100">
                 <ShieldCheck className="w-5 h-5 text-rose-600" />
               </div>
