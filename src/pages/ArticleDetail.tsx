@@ -8,7 +8,8 @@ import BlogOutput from "@/components/BlogOutput";
 import BlogActions from "@/components/BlogActions";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Loader2 } from "lucide-react";
-import type { BlogArticle } from "@/types/blog";
+import type { BlogArticle, ArticleVariation } from "@/types/blog";
+import ArticleVariations from "@/components/ArticleVariations";
 
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -17,6 +18,7 @@ const ArticleDetail = () => {
   const navigate = useNavigate();
   const [article, setArticle] = useState<(BlogArticle & { topic: string; tone: string; word_count: string }) | null>(null);
   const [loading, setLoading] = useState(true);
+  const [variations, setVariations] = useState<ArticleVariation[]>([]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/auth", { replace: true });
@@ -72,7 +74,20 @@ const ArticleDetail = () => {
 
         <div className="space-y-6">
           <BlogOutput article={article} onArticleChange={(updated) => setArticle({ ...article, ...updated })} editable isPro={isPro} />
-          <BlogActions article={article} isPro={isPro} isPlus={isPlus} />
+          <BlogActions
+            article={article}
+            isPro={isPro}
+            isPlus={isPlus}
+            onArticleChange={(updated) => setArticle({ ...article, ...updated })}
+            topic={article.topic}
+            primaryKeyword=""
+            secondaryKeywords=""
+            variations={variations}
+            onVariationsChange={setVariations}
+          />
+          {variations.length > 0 && (
+            <ArticleVariations variations={variations} />
+          )}
         </div>
       </div>
     </div>
