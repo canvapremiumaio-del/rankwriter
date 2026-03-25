@@ -13,7 +13,7 @@ import type { BlogArticle } from "@/types/blog";
 const ArticleDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user, loading: authLoading } = useAuth();
-  const { isPro, loading: planLoading } = useUserPlan();
+  const { isPro, isPlus, loading: planLoading } = useUserPlan();
   const navigate = useNavigate();
   const [article, setArticle] = useState<(BlogArticle & { topic: string; tone: string; word_count: string }) | null>(null);
   const [loading, setLoading] = useState(true);
