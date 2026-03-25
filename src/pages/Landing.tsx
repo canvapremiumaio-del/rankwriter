@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search } from "lucide-react";
-
 import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search, BarChart3, Layers } from "lucide-react";
 
 const features = [
