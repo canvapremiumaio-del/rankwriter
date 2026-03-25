@@ -6,3 +6,14 @@ export interface BlogArticle {
   article: string;
   conclusion: string;
 }
+
+export interface SeoScore {
+  score: number;
+  suggestions: string[];
+}
+
+export interface ArticleVariation {
+  title: string;
+  article: string;
+  conclusion: string;
+}
