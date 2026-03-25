@@ -256,7 +256,7 @@ const Admin = () => {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           <div className="bg-card rounded-xl border border-border p-5">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-violet-100">
@@ -287,6 +287,17 @@ const Admin = () => {
               <div>
                 <p className="text-2xl font-bold text-foreground">{users.filter((u) => u.plan === "pro").length}</p>
                 <p className="text-xs text-muted-foreground">Pro Users</p>
+              </div>
+            </div>
+          </div>
+          <div className="bg-card rounded-xl border border-border p-5">
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-lg bg-violet-100">
+                <Crown className="w-5 h-5 text-violet-600" />
+              </div>
+              <div>
+                <p className="text-2xl font-bold text-foreground">{users.filter((u) => u.plan === "plus").length}</p>
+                <p className="text-xs text-muted-foreground">Plus Users</p>
               </div>
             </div>
           </div>
