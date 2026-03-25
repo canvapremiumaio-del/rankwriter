@@ -36,7 +36,7 @@ interface UserData {
   id: string;
   email: string | null;
   created_at: string;
-  plan: "basic" | "pro";
+  plan: "basic" | "pro" | "plus";
   isAdmin: boolean;
 }
 
@@ -56,7 +56,7 @@ const Admin = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [newPlan, setNewPlan] = useState<"basic" | "pro">("basic");
+  const [newPlan, setNewPlan] = useState<"basic" | "pro" | "plus">("basic");
   const [addingUser, setAddingUser] = useState(false);
 
   useEffect(() => {
@@ -113,7 +113,7 @@ const Admin = () => {
       id: p.id,
       email: p.email,
       created_at: p.created_at,
-      plan: (planMap.get(p.id) as "basic" | "pro") || "basic",
+      plan: (planMap.get(p.id) as "basic" | "pro" | "plus") || "basic",
       isAdmin: adminSet.has(p.id),
     }));
 
@@ -121,7 +121,7 @@ const Admin = () => {
     setLoadingUsers(false);
   };
 
-  const handlePlanChange = async (userId: string, newPlan: "basic" | "pro") => {
+  const handlePlanChange = async (userId: string, newPlan: "basic" | "pro" | "plus") => {
     setUpdatingPlan(userId);
     const { error } = await supabase
       .from("user_plans")
@@ -377,7 +377,7 @@ const Admin = () => {
                       <TableCell>
                         <Select
                           value={u.plan}
-                          onValueChange={(val) => handlePlanChange(u.id, val as "basic" | "pro")}
+                          onValueChange={(val) => handlePlanChange(u.id, val as "basic" | "pro" | "plus")}
                           disabled={updatingPlan === u.id}
                         >
                           <SelectTrigger className="w-28 h-8">
@@ -392,8 +392,14 @@ const Admin = () => {
                             </SelectItem>
                             <SelectItem value="pro">
                               <span className="flex items-center gap-1.5">
-                                <span className="w-2 h-2 rounded-full bg-violet-500" />
+                                <span className="w-2 h-2 rounded-full bg-amber-500" />
                                 Pro
+                              </span>
+                            </SelectItem>
+                            <SelectItem value="plus">
+                              <span className="flex items-center gap-1.5">
+                                <span className="w-2 h-2 rounded-full bg-violet-500" />
+                                Plus
                               </span>
                             </SelectItem>
                           </SelectContent>
@@ -470,13 +476,14 @@ const Admin = () => {
             </div>
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">Plan</label>
-              <Select value={newPlan} onValueChange={(v) => setNewPlan(v as "basic" | "pro")}>
+              <Select value={newPlan} onValueChange={(v) => setNewPlan(v as "basic" | "pro" | "plus")}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="basic">Basic</SelectItem>
                   <SelectItem value="pro">Pro</SelectItem>
+                  <SelectItem value="plus">Plus</SelectItem>
                 </SelectContent>
               </Select>
             </div>
