@@ -201,15 +201,30 @@ const Admin = () => {
 
   const handleAddUser = async () => {
     if (!newEmail.trim() || !newPassword.trim()) return;
+    if (newPassword.trim().length < 6) {
+      toast({ title: "Error", description: "Password must be at least 6 characters", variant: "destructive" });
+      return;
+    }
+
     setAddingUser(true);
     try {
       const { data, error } = await supabase.functions.invoke("admin-create-user", {
         body: { email: newEmail.trim(), password: newPassword, plan: newPlan },
       });
+
       if (error || data?.error) {
-        toast({ title: "Error", description: data?.error || "Failed to create user", variant: "destructive" });
+        toast({
+          title: "Error",
+          description: data?.error || error?.message || "Failed to create user",
+          variant: "destructive",
+        });
       } else {
-        toast({ title: "User Created! ✅", description: `${newEmail} has been added successfully.` });
+        toast({
+          title: data?.existing ? "User Already Exists" : "User Created! ✅",
+          description: data?.existing
+            ? `${newEmail} already existed. User data has been synced and plan updated.`
+            : `${newEmail} has been added successfully.`,
+        });
         setAddDialogOpen(false);
         setNewEmail("");
         setNewPassword("");
