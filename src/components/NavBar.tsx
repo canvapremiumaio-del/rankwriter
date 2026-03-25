@@ -40,12 +40,14 @@ const NavBar = () => {
           <Badge
             variant="secondary"
             className={`text-[10px] font-semibold uppercase hidden sm:flex ${
-              plan === "pro"
-                ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
-                : "bg-muted text-muted-foreground"
+              plan === "plus"
+                ? "bg-violet-500/15 text-violet-600 border border-violet-500/30"
+                : plan === "pro"
+                  ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
+                  : "bg-muted text-muted-foreground"
             }`}
           >
-            {plan === "pro" ? "⭐ Pro" : "Basic"}
+            {plan === "plus" ? "💎 Plus" : plan === "pro" ? "⭐ Pro" : "Basic"}
           </Badge>
           <span className="text-xs text-muted-foreground hidden md:block">{user.email}</span>
           <Button variant="ghost" size="sm" onClick={signOut} className="gap-2">

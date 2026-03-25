@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search } from "lucide-react";
 
+import { Sparkles, FileDown, LayoutList, ArrowRight, Star, Zap, Shield, Globe, CheckCircle2, FileText, Wand2, Copy, Search, BarChart3, Layers } from "lucide-react";
+
 const features = [
   {
     icon: Sparkles,
@@ -45,6 +47,30 @@ const features = [
     description: "Download articles as professionally formatted PDF or Word documents, ready to publish.",
     bg: "bg-sky-50",
     iconColor: "text-sky-600",
+  },
+  {
+    icon: BarChart3,
+    title: "SEO Score Analysis",
+    description: "Get AI-powered SEO scoring (0–100) with actionable improvement suggestions for every article.",
+    bg: "bg-violet-50",
+    iconColor: "text-violet-600",
+    badge: "PLUS",
+  },
+  {
+    icon: Search,
+    title: "AI Keyword Suggestions",
+    description: "Auto-generate primary, secondary, and long-tail keywords before writing your article.",
+    bg: "bg-purple-50",
+    iconColor: "text-purple-600",
+    badge: "PLUS",
+  },
+  {
+    icon: Layers,
+    title: "Multiple Article Variations",
+    description: "Generate 2–3 different versions of every article with unique wording and structure.",
+    bg: "bg-fuchsia-50",
+    iconColor: "text-fuchsia-600",
+    badge: "PLUS",
   },
   {
     icon: Zap,
