@@ -74,21 +74,51 @@ serve(async (req) => {
     if (!userId) throw new Error("Failed to resolve user account");
 
     const now = new Date().toISOString();
-    const [profileRes, roleRes, planRes] = await Promise.all([
+
+    const [profileRes, roleLookupRes, planLookupRes] = await Promise.all([
       adminClient
         .from("profiles")
         .upsert({ id: userId, email: String(email) }, { onConflict: "id" }),
       adminClient
         .from("user_roles")
-        .upsert({ user_id: userId, role: "user" }, { onConflict: "user_id" }),
+        .select("id")
+        .eq("user_id", userId)
+        .eq("role", "user")
+        .maybeSingle(),
       adminClient
         .from("user_plans")
-        .upsert({ user_id: userId, plan: selectedPlan, updated_at: now }, { onConflict: "user_id" }),
+        .select("id")
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(1),
     ]);
 
     if (profileRes.error) throw profileRes.error;
-    if (roleRes.error) throw roleRes.error;
-    if (planRes.error) throw planRes.error;
+    if (roleLookupRes.error) throw roleLookupRes.error;
+    if (planLookupRes.error) throw planLookupRes.error;
+
+    if (!roleLookupRes.data) {
+      const { error: roleInsertError } = await adminClient
+        .from("user_roles")
+        .insert({ user_id: userId, role: "user" });
+
+      if (roleInsertError && roleInsertError.code !== "23505") throw roleInsertError;
+    }
+
+    if (planLookupRes.data.length > 0) {
+      const { error: planUpdateError } = await adminClient
+        .from("user_plans")
+        .update({ plan: selectedPlan, updated_at: now })
+        .eq("id", planLookupRes.data[0].id);
+
+      if (planUpdateError) throw planUpdateError;
+    } else {
+      const { error: planInsertError } = await adminClient
+        .from("user_plans")
+        .insert({ user_id: userId, plan: selectedPlan, updated_at: now });
+
+      if (planInsertError) throw planInsertError;
+    }
 
     return new Response(
       JSON.stringify({ success: true, existing: alreadyExisted, user: { id: userId, email } }),
