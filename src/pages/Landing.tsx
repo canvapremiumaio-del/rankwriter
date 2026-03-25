@@ -242,8 +242,15 @@ const Landing = () => {
               key={f.title}
               className="group bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100/80 transition-all duration-300 hover:-translate-y-1"
             >
-              <div className={`p-3 rounded-xl ${f.bg} w-fit mb-4 group-hover:scale-110 transition-transform`}>
-                <f.icon className={`w-6 h-6 ${f.iconColor}`} />
+              <div className="flex items-start justify-between mb-4">
+                <div className={`p-3 rounded-xl ${f.bg} w-fit group-hover:scale-110 transition-transform`}>
+                  <f.icon className={`w-6 h-6 ${f.iconColor}`} />
+                </div>
+                {"badge" in f && f.badge && (
+                  <Badge className="bg-violet-100 text-violet-700 border-violet-200 hover:bg-violet-100 text-[10px]">
+                    {f.badge}
+                  </Badge>
+                )}
               </div>
               <h3 className="font-semibold text-gray-900 text-lg mb-2">{f.title}</h3>
               <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
