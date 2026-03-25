@@ -49,11 +49,11 @@ serve(async (req) => {
 
     if (createError) throw createError;
 
-    // Update plan if pro
-    if (plan === "pro" && newUser.user) {
+    // Update plan if not basic
+    if (plan && plan !== "basic" && newUser.user) {
       await adminClient
         .from("user_plans")
-        .update({ plan: "pro", updated_at: new Date().toISOString() })
+        .update({ plan, updated_at: new Date().toISOString() })
         .eq("user_id", newUser.user.id);
     }
 
