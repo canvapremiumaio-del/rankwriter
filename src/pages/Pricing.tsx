@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
 import { supabase } from "@/integrations/supabase/client";
-import NavBar from "@/components/NavBar";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -136,88 +136,86 @@ const Pricing = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <NavBar />
-      <div className="max-w-5xl mx-auto px-4 pb-20 pt-8">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-3">
-            Choose Your Plan
-          </h1>
-          <p className="text-muted-foreground text-lg">
-            Unlock premium features to supercharge your content creation.
-          </p>
-        </div>
+    <div className="flex h-screen overflow-hidden bg-slate-50">
+      <DashboardSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <header className="h-16 flex items-center justify-center px-8 border-b border-slate-200 bg-white/80 backdrop-blur-sm shrink-0">
+          <div className="text-center">
+            <h1 className="text-xl font-bold text-slate-800 font-display">Choose Your Plan</h1>
+            <p className="text-xs text-slate-500">Unlock premium features to supercharge your content.</p>
+          </div>
+        </header>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {plans.map((p) => {
-            const isActive = currentPlan === p.id;
-            return (
-              <div
-                key={p.id}
-                className={`bg-card rounded-2xl border-2 p-6 md:p-8 relative transition-shadow ${
-                  p.recommended
-                    ? "border-violet-500 shadow-lg shadow-violet-500/10"
-                    : "border-border shadow-sm"
-                }`}
-              >
-                {p.recommended && (
-                  <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-violet-500 text-white px-3">
-                    Best Value
-                  </Badge>
-                )}
-                {isActive && (
-                  <Badge className="absolute -top-3 right-4 bg-emerald-500 text-white px-3">
-                    Active
-                  </Badge>
-                )}
-                <h2 className="text-xl font-bold text-foreground mb-1">{p.name}</h2>
-                <p className="text-sm text-muted-foreground mb-4">{p.description}</p>
-                <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold text-foreground">{p.price}</span>
-                  <span className="text-muted-foreground text-sm">/month</span>
-                </div>
-
-                <ul className="space-y-3 mb-8">
-                  {p.features.map((f) => (
-                    <li key={f.text} className="flex items-center gap-2.5 text-sm">
-                      {f.included ? (
-                        <Check className="w-4 h-4 text-primary shrink-0" />
-                      ) : (
-                        <X className="w-4 h-4 text-muted-foreground/40 shrink-0" />
-                      )}
-                      <span className={f.included ? "text-foreground" : "text-muted-foreground"}>
-                        {f.text}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Button
-                  className="w-full h-11"
-                  variant={isActive ? "secondary" : p.recommended ? "default" : "outline"}
-                  disabled={isActive}
-                  onClick={() => handleSelect(p.id)}
+        <main className="flex-1 p-6 overflow-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+            {plans.map((p) => {
+              const isActive = currentPlan === p.id;
+              return (
+                <div
+                  key={p.id}
+                  className={`bg-white rounded-2xl border-2 p-5 relative transition-shadow ${
+                    p.recommended
+                      ? "border-pink-500 shadow-lg shadow-pink-500/10"
+                      : "border-slate-200 shadow-sm"
+                  }`}
                 >
-                  {isActive ? "✓ Current Plan" : `Get ${p.name}`}
-                </Button>
-              </div>
-            );
-          })}
-        </div>
+                  {p.recommended && (
+                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 border-0">
+                      Best Value
+                    </Badge>
+                  )}
+                  {isActive && (
+                    <Badge className="absolute -top-3 right-4 bg-emerald-500 text-white px-3 border-0">
+                      Active
+                    </Badge>
+                  )}
+                  <h2 className="text-lg font-bold text-slate-800 mb-1">{p.name}</h2>
+                  <p className="text-xs text-slate-500 mb-3">{p.description}</p>
+                  <div className="flex items-baseline gap-1 mb-4">
+                    <span className="text-3xl font-bold text-slate-800">{p.price}</span>
+                    <span className="text-slate-400 text-sm">/month</span>
+                  </div>
 
-        {/* Contact info */}
-        <div className="mt-10 text-center bg-muted/50 rounded-xl border border-border p-6">
-          <MessageCircle className="w-6 h-6 text-primary mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">
-            To upgrade or change your plan, enter a coupon code or contact us on WhatsApp:{" "}
-            <a href="https://wa.me/923059694651" target="_blank" rel="noopener noreferrer" className="text-primary font-medium hover:underline">
-              +92 305 9694651
-            </a>
-          </p>
-        </div>
+                  <ul className="space-y-2 mb-6">
+                    {p.features.map((f) => (
+                      <li key={f.text} className="flex items-center gap-2 text-xs">
+                        {f.included ? (
+                          <Check className="w-3.5 h-3.5 text-pink-500 shrink-0" />
+                        ) : (
+                          <X className="w-3.5 h-3.5 text-slate-300 shrink-0" />
+                        )}
+                        <span className={f.included ? "text-slate-700" : "text-slate-400"}>
+                          {f.text}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <Button
+                    className={`w-full h-10 text-sm ${p.recommended && !isActive ? "bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700 text-white border-0" : ""}`}
+                    variant={isActive ? "secondary" : p.recommended ? "default" : "outline"}
+                    disabled={isActive}
+                    onClick={() => handleSelect(p.id)}
+                  >
+                    {isActive ? "✓ Current Plan" : `Get ${p.name}`}
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="mt-6 text-center bg-white rounded-xl border border-slate-200 p-4 max-w-md mx-auto">
+            <MessageCircle className="w-5 h-5 text-pink-500 mx-auto mb-1" />
+            <p className="text-xs text-slate-500">
+              Contact us on WhatsApp:{" "}
+              <a href="https://wa.me/923059694651" target="_blank" rel="noopener noreferrer" className="text-pink-500 font-medium hover:underline">
+                +92 305 9694651
+              </a>
+            </p>
+          </div>
+        </main>
       </div>
 
-      {/* Coupon / Contact Dialog */}
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>

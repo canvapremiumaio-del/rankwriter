@@ -41,7 +41,7 @@ const DashboardSidebar = () => {
   return (
     <aside className="w-[220px] min-h-screen flex flex-col justify-between py-6 px-4"
       style={{
-        background: "linear-gradient(180deg, #0f172a 0%, #1e3a5f 50%, #0ea5e9 100%)",
+        background: "linear-gradient(180deg, #1e1b4b 0%, #4c1d95 30%, #be185d 65%, #ec4899 100%)",
       }}
     >
       {/* Top */}
