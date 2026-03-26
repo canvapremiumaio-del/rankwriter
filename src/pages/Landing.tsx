@@ -100,7 +100,7 @@ const testimonials = [
     text: "Rank Writer cut my content creation time by 80%. The SEO optimization is incredible — my articles rank on page one consistently.",
     rating: 5,
     avatar: "SC",
-    color: "bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)]",
+    color: "bg-gradient-to-br from-pink-500 to-fuchsia-600",
   },
   {
     name: "Marcus Rodriguez",
@@ -133,21 +133,21 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Nav */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 z-50">
+      <nav className="bg-white/80 backdrop-blur-md border-b border-pink-100/50 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-indigo-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
             <span className="font-bold text-gray-900 text-lg tracking-tight">
-              Rank <span className="text-[hsl(172,66%,40%)]">Writer</span>
+              Rank <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Writer</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
             <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-gray-600 hover:text-gray-900">
               Sign In
             </Button>
-            <Button size="sm" onClick={() => navigate("/auth")} className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] hover:from-[hsl(172,66%,35%)] hover:to-[hsl(172,66%,25%)] text-white shadow-lg shadow-[hsl(172,66%,40%/0.3)] gap-1.5">
+            <Button size="sm" onClick={() => navigate("/auth")} className="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white shadow-lg shadow-pink-500/30 gap-1.5">
               Get Started Free <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
@@ -157,19 +157,19 @@ const Landing = () => {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-[hsl(172,50%,80%/0.4)] rounded-full blur-3xl" />
-          <div className="absolute top-20 -left-40 w-80 h-80 bg-sky-200/40 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-emerald-200/30 rounded-full blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-pink-300/40 rounded-full blur-3xl" />
+          <div className="absolute top-20 -left-40 w-80 h-80 bg-indigo-300/40 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-fuchsia-200/30 rounded-full blur-3xl" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center py-20 md:py-32">
-          <Badge className="mb-6 bg-[hsl(172,50%,94%)] text-[hsl(172,66%,30%)] border-[hsl(172,50%,85%)] hover:bg-[hsl(172,50%,94%)] text-sm font-medium px-4 py-1.5">
+          <Badge className="mb-6 bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-50 text-sm font-medium px-4 py-1.5">
             ✨ Smart SEO Content Platform
           </Badge>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
             Write & Rank with
             <br />
-            <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-pink-500 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
               SEO Precision
             </span>
           </h1>
@@ -181,7 +181,7 @@ const Landing = () => {
             <Button
               size="lg"
               onClick={() => navigate("/auth")}
-              className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] hover:from-[hsl(172,66%,35%)] hover:to-[hsl(172,66%,25%)] text-white shadow-xl shadow-[hsl(172,66%,40%/0.3)] gap-2 h-14 px-10 text-base font-semibold rounded-xl"
+              className="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white shadow-xl shadow-pink-500/30 gap-2 h-14 px-10 text-base font-semibold rounded-xl"
             >
               <Sparkles className="w-5 h-5" />
               Start Writing for Free
@@ -206,12 +206,12 @@ const Landing = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 border-y border-gray-100 bg-gradient-to-r from-[hsl(172,50%,96%)] via-white to-[hsl(200,50%,96%)]">
+      <section className="py-16 border-y border-pink-100/50 bg-gradient-to-r from-pink-50/60 via-white to-indigo-50/60">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-[hsl(172,66%,40%)] to-[hsl(172,66%,30%)] bg-clip-text text-transparent">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">
                   {s.value}
                 </div>
                 <div className="text-sm text-gray-500 mt-1">{s.label}</div>
@@ -224,13 +224,13 @@ const Landing = () => {
       {/* Features */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-100 text-sm">
+          <Badge className="mb-4 bg-indigo-100 text-indigo-700 border-indigo-200 hover:bg-indigo-100 text-sm">
             Features
           </Badge>
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "var(--font-display)" }}>
             Everything You Need to Create
             <br />
-            <span className="bg-gradient-to-r from-[hsl(172,66%,40%)] to-emerald-500 bg-clip-text text-transparent">Great Content</span>
+            <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Great Content</span>
           </h2>
           <p className="text-gray-500 text-lg max-w-xl mx-auto">
             Powerful tools designed to make content creation effortless and professional.
@@ -263,11 +263,11 @@ const Landing = () => {
       <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-100 text-emerald-700 border-emerald-200 hover:bg-emerald-100 text-sm">
+            <Badge className="mb-4 bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 hover:bg-fuchsia-100 text-sm">
               Testimonials
             </Badge>
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
-              Loved by <span className="bg-gradient-to-r from-emerald-500 to-teal-500 bg-clip-text text-transparent">Content Creators</span>
+              Loved by <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Content Creators</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -297,7 +297,7 @@ const Landing = () => {
       {/* CTA */}
       <section className="py-20 md:py-28 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-[hsl(172,66%,40%)] via-[hsl(172,66%,35%)] to-[hsl(200,70%,45%)] rounded-3xl p-12 md:p-16 shadow-2xl shadow-[hsl(172,66%,40%/0.3)] relative overflow-hidden">
+          <div className="bg-gradient-to-br from-indigo-600 via-fuchsia-600 to-pink-500 rounded-3xl p-12 md:p-16 shadow-2xl shadow-pink-500/30 relative overflow-hidden">
             <div className="absolute inset-0 overflow-hidden pointer-events-none">
               <div className="absolute -top-20 -right-20 w-60 h-60 bg-white/10 rounded-full blur-2xl" />
               <div className="absolute -bottom-20 -left-20 w-60 h-60 bg-white/10 rounded-full blur-2xl" />
@@ -312,7 +312,7 @@ const Landing = () => {
               <Button
                 size="lg"
                 onClick={() => navigate("/auth")}
-                className="bg-white text-[hsl(172,66%,30%)] hover:bg-gray-100 gap-2 h-14 px-10 text-base font-semibold rounded-xl shadow-xl"
+                className="bg-white text-indigo-700 hover:bg-gray-100 gap-2 h-14 px-10 text-base font-semibold rounded-xl shadow-xl"
               >
                 Get Started Free <ArrowRight className="w-4 h-4" />
               </Button>
@@ -322,10 +322,10 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-gray-100 py-10 bg-gray-50">
+      <footer className="border-t border-pink-100/50 py-10 bg-gradient-to-r from-pink-50/40 to-indigo-50/40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-[hsl(172,66%,40%)] to-[hsl(172,66%,25%)] flex items-center justify-center">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-pink-500 to-indigo-600 flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
             <span className="text-sm font-semibold text-gray-700">Rank Writer</span>
