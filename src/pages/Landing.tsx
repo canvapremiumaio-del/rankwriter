@@ -189,9 +189,8 @@ const Landing = () => {
             </Button>
             <Button
               size="lg"
-              variant="outline"
               onClick={() => navigate("/auth?redirect=/pricing")}
-              className="h-14 px-10 text-base rounded-xl border-white/20 hover:bg-white/10 text-white"
+              className="h-14 px-10 text-base rounded-xl border border-white/25 bg-white/10 backdrop-blur-sm hover:bg-white/20 text-white font-semibold"
             >
               View Pricing
             </Button>
