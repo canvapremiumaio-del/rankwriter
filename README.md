@@ -1,75 +1,64 @@
-# 🚀 Rank Writer
+# 👋 Hi, I'm a SaaS & AI Automation Builder
 
-AI-powered SEO content generation tool to create high-quality, human-like blog articles in seconds.
-
----
-
-## ✨ Features
-
-- ✅ Generate SEO-optimized articles instantly  
-- ✅ Control exact word count (500 – 2500 words)  
-- ✅ Primary & secondary keyword targeting  
-- ✅ Structured headings (H1, H2, H3)  
-- ✅ Human-like writing (no robotic content)  
-- ✅ Built for speed & scalability  
+🚀 I build AI-powered tools, automation systems, and SaaS products that help businesses grow faster.
 
 ---
 
-## 🧠 Use Case
+## 🔥 Current Focus
 
-Rank Writer is designed for:
-
-- Bloggers  
-- SEO agencies  
-- SaaS founders  
-- Content marketers  
-
-It helps automate content creation while maintaining SEO quality and readability.
+- 🧠 AI Content Automation (SEO tools like Rank Writer)  
+- ⚡ Workflow Automation (n8n, APIs, AI agents)  
+- 🌐 SaaS Development (React, Supabase, AI integrations)  
 
 ---
 
-## ⚙️ Tech Stack
+## 🚀 Featured Project
 
-- React + TypeScript  
-- Supabase  
-- AI APIs (GPT / Claude integration planned)  
-- Tailwind CSS  
+### 📝 Rank Writer (AI SEO Tool)
+AI-powered platform to generate SEO-optimized blog articles instantly.
 
----
-
-## 🌐 Live Demo
-
-👉 https://rankwriter.lovable.app
-
----
-
-## 🚧 Project Status
-
-This project is actively under development.  
-New features and improvements are being added continuously.
+👉 Live: https://preview--rankwriter.lovable.app  
+👉 Features:
+- Word count control  
+- Keyword optimization  
+- Structured SEO content  
+- Human-like AI writing  
 
 ---
 
-## 🔓 Open Source Vision
+## 🛠️ Tech Stack
 
-We plan to open-source key components of Rank Writer to help developers build better AI-powered SEO tools.
-
----
-
-## 🤝 Contributing
-
-Contributions, ideas, and feedback are welcome!
+- Frontend: React, TypeScript, Tailwind  
+- Backend: Supabase  
+- Automation: n8n, APIs  
+- AI: OpenAI, Claude (learning & integrating)  
 
 ---
 
-## 📩 Contact
+## 📈 What I'm Building
 
-For collaboration or inquiries:  
-👉 https://www.linkedin.com/in/zohaib-anwar-b18284163?utm_source=share_via&utm_content=profile&utm_medium=member_android
-Email:Canvapremiumaio@gmail.com
+I am actively building tools that combine:
+- AI + Automation  
+- SaaS + Monetization  
+- Real-world business use cases  
 
 ---
 
-## ⭐ Support
+## 🤝 Open to
 
-If you like this project, consider giving it a star ⭐
+- Collaborations  
+- Client projects  
+- AI automation systems  
+
+---
+
+## 📩 Contact Me
+
+📧 Email: canvapremiumaio@gmail.com 
+💼 LinkedIn:https://www.linkedin.com/in/zohaib-anwar-b18284163?utm_source=share_via&utm_content=profile&utm_medium=member_android  
+
+---
+
+## ⭐ Goal
+Building scalable AI products and helping businesses automate & grow.
+
