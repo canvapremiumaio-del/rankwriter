@@ -131,20 +131,20 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-purple-900/20 to-white">
       {/* Nav */}
-      <nav className="bg-white/80 backdrop-blur-md border-b border-pink-100/50 sticky top-0 z-50">
+      <nav className="bg-white/5 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-pink-500 to-indigo-600 flex items-center justify-center">
               <Sparkles className="w-4 h-4 text-white" />
             </div>
-            <span className="font-bold text-gray-900 text-lg tracking-tight">
-              Rank <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Writer</span>
+            <span className="font-bold text-white text-lg tracking-tight">
+              Rank <span className="bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">Writer</span>
             </span>
           </div>
           <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-gray-600 hover:text-gray-900">
+            <Button variant="ghost" size="sm" onClick={() => navigate("/auth")} className="text-white/70 hover:text-white hover:bg-white/10">
               Sign In
             </Button>
             <Button size="sm" onClick={() => navigate("/auth")} className="bg-gradient-to-r from-pink-500 to-indigo-600 hover:from-pink-600 hover:to-indigo-700 text-white shadow-lg shadow-pink-500/30 gap-1.5">
@@ -157,23 +157,23 @@ const Landing = () => {
       {/* Hero */}
       <section className="relative overflow-hidden">
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute -top-40 -right-40 w-96 h-96 bg-pink-300/40 rounded-full blur-3xl" />
-          <div className="absolute top-20 -left-40 w-80 h-80 bg-indigo-300/40 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-fuchsia-200/30 rounded-full blur-3xl" />
+          <div className="absolute -top-40 -right-40 w-96 h-96 bg-pink-500/30 rounded-full blur-3xl animate-pulse" />
+          <div className="absolute top-20 -left-40 w-80 h-80 bg-indigo-500/30 rounded-full blur-3xl" />
+          <div className="absolute bottom-0 right-1/4 w-72 h-72 bg-fuchsia-500/20 rounded-full blur-3xl animate-pulse" />
         </div>
 
         <div className="relative max-w-6xl mx-auto px-4 sm:px-6 text-center py-20 md:py-32">
-          <Badge className="mb-6 bg-pink-50 text-pink-700 border-pink-200 hover:bg-pink-50 text-sm font-medium px-4 py-1.5">
+          <Badge className="mb-6 bg-white/10 text-pink-300 border-pink-400/30 hover:bg-white/10 text-sm font-medium px-4 py-1.5 backdrop-blur-sm">
             ✨ Smart SEO Content Platform
           </Badge>
-          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-gray-900 tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-white tracking-tight mb-6 leading-[1.1]" style={{ fontFamily: "var(--font-display)" }}>
             Write & Rank with
             <br />
             <span className="bg-gradient-to-r from-pink-500 via-fuchsia-500 to-indigo-600 bg-clip-text text-transparent">
               SEO Precision
             </span>
           </h1>
-          <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
+          <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed">
             Create professional, SEO-optimized blog posts with built-in keyword research,
             structured outlines, and export-ready formatting.
           </p>
@@ -191,22 +191,22 @@ const Landing = () => {
               size="lg"
               variant="outline"
               onClick={() => navigate("/auth?redirect=/pricing")}
-              className="h-14 px-10 text-base rounded-xl border-gray-200 hover:bg-gray-50 text-gray-700"
+              className="h-14 px-10 text-base rounded-xl border-white/20 hover:bg-white/10 text-white"
             >
               View Pricing
             </Button>
           </div>
 
-          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-gray-400">
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> No credit card required</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Free plan available</span>
-            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-emerald-500" /> Cancel anytime</span>
+          <div className="mt-12 flex flex-wrap items-center justify-center gap-6 text-sm text-white/50">
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-pink-400" /> No credit card required</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-pink-400" /> Free plan available</span>
+            <span className="flex items-center gap-1.5"><CheckCircle2 className="w-4 h-4 text-pink-400" /> Cancel anytime</span>
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-16 border-y border-pink-100/50 bg-gradient-to-r from-pink-50/60 via-white to-indigo-50/60">
+      <section className="py-16 border-y border-white/10 bg-gradient-to-r from-indigo-950/80 via-purple-950/60 to-indigo-950/80 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
@@ -214,7 +214,7 @@ const Landing = () => {
                 <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">
                   {s.value}
                 </div>
-                <div className="text-sm text-gray-500 mt-1">{s.label}</div>
+                <div className="text-sm text-white/50 mt-1">{s.label}</div>
               </div>
             ))}
           </div>
@@ -224,15 +224,15 @@ const Landing = () => {
       {/* Features */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-20 md:py-28">
         <div className="text-center mb-16">
-          <Badge className="mb-4 bg-indigo-100 text-indigo-700 border-indigo-200 hover:bg-indigo-100 text-sm">
+          <Badge className="mb-4 bg-indigo-500/20 text-indigo-300 border-indigo-400/30 hover:bg-indigo-500/20 text-sm">
             Features
           </Badge>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: "var(--font-display)" }}>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4" style={{ fontFamily: "var(--font-display)" }}>
             Everything You Need to Create
             <br />
-            <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Great Content</span>
+            <span className="bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">Great Content</span>
           </h2>
-          <p className="text-gray-500 text-lg max-w-xl mx-auto">
+          <p className="text-white/50 text-lg max-w-xl mx-auto">
             Powerful tools designed to make content creation effortless and professional.
           </p>
         </div>
@@ -240,7 +240,7 @@ const Landing = () => {
           {features.map((f) => (
             <div
               key={f.title}
-              className="group bg-white rounded-2xl border border-gray-100 p-6 hover:shadow-xl hover:shadow-gray-100/80 transition-all duration-300 hover:-translate-y-1"
+              className="group bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6 hover:bg-white/10 hover:shadow-xl hover:shadow-pink-500/10 transition-all duration-300 hover:-translate-y-1"
             >
               <div className="flex items-start justify-between mb-4">
                 <div className={`p-3 rounded-xl ${f.bg} w-fit group-hover:scale-110 transition-transform`}>
@@ -252,40 +252,40 @@ const Landing = () => {
                   </Badge>
                 )}
               </div>
-              <h3 className="font-semibold text-gray-900 text-lg mb-2">{f.title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{f.description}</p>
+              <h3 className="font-semibold text-white text-lg mb-2">{f.title}</h3>
+              <p className="text-sm text-white/50 leading-relaxed">{f.description}</p>
             </div>
           ))}
         </div>
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 md:py-28 bg-gradient-to-b from-gray-50 to-white">
+      <section className="py-20 md:py-28 bg-gradient-to-b from-transparent via-purple-950/30 to-transparent">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-fuchsia-100 text-fuchsia-700 border-fuchsia-200 hover:bg-fuchsia-100 text-sm">
+            <Badge className="mb-4 bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/30 hover:bg-fuchsia-500/20 text-sm">
               Testimonials
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900" style={{ fontFamily: "var(--font-display)" }}>
-              Loved by <span className="bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">Content Creators</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-white" style={{ fontFamily: "var(--font-display)" }}>
+              Loved by <span className="bg-gradient-to-r from-pink-400 to-indigo-400 bg-clip-text text-transparent">Content Creators</span>
             </h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {testimonials.map((t) => (
-              <div key={t.name} className="bg-white rounded-2xl border border-gray-100 p-6 shadow-sm hover:shadow-lg transition-shadow">
+              <div key={t.name} className="bg-white/5 backdrop-blur-sm rounded-2xl border border-white/10 p-6 hover:bg-white/10 transition-all">
                 <div className="flex items-center gap-1 mb-4">
                   {Array.from({ length: t.rating }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-gray-600 leading-relaxed mb-6">"{t.text}"</p>
+                <p className="text-white/70 leading-relaxed mb-6">"{t.text}"</p>
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-full ${t.color} flex items-center justify-center text-white text-sm font-bold`}>
                     {t.avatar}
                   </div>
                   <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t.name}</p>
-                    <p className="text-xs text-gray-500">{t.role}</p>
+                    <p className="font-semibold text-white text-sm">{t.name}</p>
+                    <p className="text-xs text-white/50">{t.role}</p>
                   </div>
                 </div>
               </div>
@@ -322,15 +322,15 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-pink-100/50 py-10 bg-gradient-to-r from-pink-50/40 to-indigo-50/40">
+      <footer className="border-t border-white/10 py-10 bg-indigo-950/50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-pink-500 to-indigo-600 flex items-center justify-center">
               <Sparkles className="w-3 h-3 text-white" />
             </div>
-            <span className="text-sm font-semibold text-gray-700">Rank Writer</span>
+            <span className="text-sm font-semibold text-white/80">Rank Writer</span>
           </div>
-          <p className="text-xs text-gray-400">© 2026 Rank Writer. All rights reserved.</p>
+          <p className="text-xs text-white/40">© 2026 Rank Writer. All rights reserved.</p>
         </div>
       </footer>
     </div>
