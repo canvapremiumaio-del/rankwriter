@@ -1,110 +1,29 @@
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserPlan } from "@/hooks/useUserPlan";
-import NavBar from "@/components/NavBar";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap, Search, FileText, Wand2, Copy, Globe, BarChart3, Layers } from "lucide-react";
+import {
+  Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap,
+  Search, FileText, Wand2, Copy, Globe, BarChart3, Layers,
+} from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { differenceInDays, differenceInHours, differenceInMinutes, format } from "date-fns";
 
 const features = [
-  {
-    icon: Sparkles,
-    title: "Smart Blog Writing",
-    description: "Create complete, professional blog articles in seconds — natural tone, engaging style.",
-    basic: "Simple blog structure",
-    pro: "SEO-optimized content with detailed sections",
-    tier: "basic",
-  },
-  {
-    icon: Search,
-    title: "SEO Keywords & Meta",
-    description: "Built-in keyword research, meta descriptions, and tags to boost your Google rankings.",
-    basic: null,
-    pro: "Full SEO toolkit with keywords, meta description & tags",
-    tier: "pro",
-  },
-  {
-    icon: LayoutList,
-    title: "Smart Content Structuring",
-    description: "Professional H1, H2, H3 heading hierarchy with structured outlines and clean formatting.",
-    basic: "Basic outline",
-    pro: "H1, H2, H3 headings with professional structure",
-    tier: "basic",
-  },
-  {
-    icon: Wand2,
-    title: "Content Enhancer",
-    description: "One-click rewrite to make any article sound more natural, engaging, and polished.",
-    basic: null,
-    pro: "Smart content enhancement & rewrite",
-    tier: "pro",
-  },
-  {
-    icon: Zap,
-    title: "Extended Word Count",
-    description: "Create longer, more detailed articles with extended word counts.",
-    basic: "Up to 1,000 words",
-    pro: "Up to 2,500 words",
-    tier: "basic",
-  },
-  {
-    icon: FileDown,
-    title: "Export to PDF",
-    description: "Download articles as professionally formatted PDF documents.",
-    basic: null,
-    pro: "One-click PDF export",
-    tier: "pro",
-  },
-  {
-    icon: FileText,
-    title: "Export to Word",
-    description: "Download articles as Word documents ready for editing.",
-    basic: null,
-    pro: "One-click Word export",
-    tier: "pro",
-  },
-  {
-    icon: Copy,
-    title: "Copy & Share",
-    description: "Instantly copy your article to clipboard — paste anywhere, anytime.",
-    basic: "Copy to clipboard",
-    pro: "Copy to clipboard",
-    tier: "basic",
-  },
-  {
-    icon: Globe,
-    title: "Any Topic, Any Niche",
-    description: "From tech to travel, finance to food — write about anything with confidence.",
-    basic: "All topics supported",
-    pro: "All topics with priority quality",
-    tier: "basic",
-  },
-  {
-    icon: BarChart3,
-    title: "SEO Score Analysis",
-    description: "Get AI-powered SEO scoring (0–100) with actionable improvement suggestions.",
-    basic: null,
-    pro: null,
-    tier: "plus",
-  },
-  {
-    icon: Search,
-    title: "AI Keyword Suggestions",
-    description: "Auto-generate primary, secondary, and long-tail keywords for any topic.",
-    basic: null,
-    pro: null,
-    tier: "plus",
-  },
-  {
-    icon: Layers,
-    title: "Multiple Article Variations",
-    description: "Generate 2–3 different versions of every article with unique wording.",
-    basic: null,
-    pro: null,
-    tier: "plus",
-  },
+  { icon: Sparkles, title: "Smart Blog Writing", description: "Create complete, professional blog articles in seconds.", tier: "basic" },
+  { icon: Search, title: "SEO Keywords & Meta", description: "Built-in keyword research, meta descriptions, and tags.", tier: "pro" },
+  { icon: LayoutList, title: "Smart Structuring", description: "Professional H1–H3 heading hierarchy with clean formatting.", tier: "basic" },
+  { icon: Wand2, title: "Content Enhancer", description: "One-click rewrite to make articles more natural and polished.", tier: "pro" },
+  { icon: Zap, title: "Extended Word Count", description: "Create longer, more detailed articles up to 2,500 words.", tier: "basic" },
+  { icon: FileDown, title: "Export to PDF", description: "Download articles as professionally formatted PDFs.", tier: "pro" },
+  { icon: FileText, title: "Export to Word", description: "Download articles as Word documents ready for editing.", tier: "pro" },
+  { icon: Copy, title: "Copy & Share", description: "Instantly copy your article to clipboard.", tier: "basic" },
+  { icon: Globe, title: "Any Topic, Any Niche", description: "From tech to travel — write about anything.", tier: "basic" },
+  { icon: BarChart3, title: "SEO Score Analysis", description: "AI-powered SEO scoring (0–100) with suggestions.", tier: "plus" },
+  { icon: Search, title: "AI Keyword Suggestions", description: "Auto-generate primary, secondary & long-tail keywords.", tier: "plus" },
+  { icon: Layers, title: "Multiple Variations", description: "Generate 2–3 different versions of every article.", tier: "plus" },
 ];
 
 const Dashboard = () => {
@@ -113,7 +32,7 @@ const Dashboard = () => {
   const { plan, isPro, isPlus, loading: planLoading, expiresAt } = useUserPlan();
 
   const expiryInfo = useMemo(() => {
-    if (!expiresAt || !isPro) return null;
+    if (!expiresAt || (!isPro && !isPlus)) return null;
     const expDate = new Date(expiresAt);
     const now = new Date();
     if (expDate <= now) return null;
@@ -125,7 +44,7 @@ const Dashboard = () => {
     else if (hours > 0) label = `${hours}h ${mins}m remaining`;
     else label = `${mins}m remaining`;
     return { label, date: format(expDate, "MMM d, yyyy h:mm a") };
-  }, [expiresAt, isPro]);
+  }, [expiresAt, isPro, isPlus]);
 
   useEffect(() => {
     if (!authLoading && !user) navigate("/landing", { replace: true });
@@ -139,133 +58,108 @@ const Dashboard = () => {
     );
   }
 
-  const planBadgeClass = isPlus
-    ? "bg-violet-500/15 text-violet-600 border border-violet-500/30"
-    : isPro
-      ? "bg-amber-500/15 text-amber-600 border border-amber-500/30"
-      : "bg-muted text-muted-foreground";
-
-  const planLabel = isPlus ? "💎 Plus Plan" : isPro ? "⭐ Pro Plan" : "Basic Plan";
-
   const isFeatureUnlocked = (tier: string) => {
     if (tier === "basic") return true;
-    if (tier === "pro") return isPro;
+    if (tier === "pro") return isPro || isPlus;
     if (tier === "plus") return isPlus;
     return false;
   };
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Beautiful gradient background */}
-      <div className="fixed inset-0 -z-10">
-        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(172,50%,95%)] via-[hsl(210,40%,96%)] to-[hsl(260,40%,96%)]" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[hsl(172,66%,40%/0.08)] rounded-full blur-[120px] -translate-y-1/2 translate-x-1/4" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[hsl(260,60%,60%/0.08)] rounded-full blur-[120px] translate-y-1/3 -translate-x-1/4" />
-        <div className="absolute top-1/2 left-1/2 w-[400px] h-[400px] bg-[hsl(200,70%,60%/0.06)] rounded-full blur-[100px] -translate-x-1/2 -translate-y-1/2" />
-      </div>
+    <div className="flex h-screen overflow-hidden bg-slate-50">
+      <DashboardSidebar />
 
-      <NavBar />
-      <div className="max-w-4xl mx-auto px-4 pb-20">
-        {/* Hero */}
-        <section className="text-center py-16 md:py-24">
-          <Badge
-            variant="secondary"
-            className={`mb-4 text-xs font-semibold uppercase ${planBadgeClass}`}
-          >
-            {planLabel}
-          </Badge>
-          {expiryInfo && (
-            <div className="mb-4 flex flex-col items-center gap-1">
-              <Badge className="bg-orange-500/15 text-orange-600 border border-orange-500/30 text-xs font-medium px-3 py-1">
+      {/* Main content */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top bar */}
+        <header className="h-16 flex items-center justify-between px-8 border-b border-slate-200 bg-white/80 backdrop-blur-sm shrink-0">
+          <div>
+            <h1 className="text-xl font-bold text-slate-800 font-display">
+              Welcome back 👋
+            </h1>
+            <p className="text-xs text-slate-500">Ready to create amazing content?</p>
+          </div>
+          <div className="flex items-center gap-3">
+            {expiryInfo && (
+              <Badge className="bg-orange-100 text-orange-700 border border-orange-200 text-[10px]">
                 ⏳ {expiryInfo.label}
               </Badge>
-              <span className="text-[11px] text-muted-foreground">
-                Expires: {expiryInfo.date}
-              </span>
-            </div>
-          )}
-          <h1 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-4">
-            Rank<span className="text-primary">Writer</span>
-          </h1>
-          <p className="text-muted-foreground text-lg max-w-lg mx-auto mb-8">
-            Create SEO-optimized articles in seconds. Write smarter, rank higher.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Button size="lg" onClick={() => navigate("/generate")} className="gap-2 h-12 px-8 text-base font-semibold">
-              <Sparkles className="w-5 h-5" />
+            )}
+            <Button size="sm" onClick={() => navigate("/generate")} className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white border-0">
+              <Sparkles className="w-4 h-4" />
               Start Writing
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-3 h-3" />
             </Button>
             {!isPlus && (
-              <Button size="lg" variant="outline" onClick={() => navigate("/pricing")} className="h-12 px-8 text-base gap-2 bg-card/60 backdrop-blur-sm">
-                <Crown className="w-5 h-5" />
+              <Button size="sm" variant="outline" onClick={() => navigate("/pricing")} className="gap-2 border-blue-200 text-blue-600 hover:bg-blue-50">
+                <Crown className="w-4 h-4" />
                 {isPro ? "Upgrade to Plus" : "Upgrade Plan"}
               </Button>
             )}
           </div>
-        </section>
+        </header>
 
-        {/* Features */}
-        <section>
-          <h2 className="text-xl font-bold text-foreground mb-6 text-center">
-            {isPlus ? "Your Plus Features" : isPro ? "Your Pro Features" : "Plan Features"}
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Content area - no scroll */}
+        <main className="flex-1 p-6 overflow-auto">
+          {/* Stats cards */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/20">
+              <p className="text-blue-100 text-xs font-medium mb-1">Current Plan</p>
+              <p className="text-2xl font-bold">{isPlus ? "💎 Plus" : isPro ? "⭐ Pro" : "Basic"}</p>
+            </div>
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg shadow-cyan-500/20">
+              <p className="text-cyan-100 text-xs font-medium mb-1">Features Available</p>
+              <p className="text-2xl font-bold">{features.filter(f => isFeatureUnlocked(f.tier)).length}/{features.length}</p>
+            </div>
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20">
+              <p className="text-indigo-100 text-xs font-medium mb-1">Plan Status</p>
+              <p className="text-2xl font-bold">{expiryInfo ? expiryInfo.label : "Active"}</p>
+            </div>
+          </div>
+
+          {/* Features grid */}
+          <h2 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-4">Your Features</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
             {features.map((f) => {
               const unlocked = isFeatureUnlocked(f.tier);
-              const locked = !unlocked;
               return (
                 <div
                   key={f.title}
-                  className={`rounded-2xl border p-5 relative transition-all backdrop-blur-sm ${
-                    locked
-                      ? "bg-muted/30 border-border opacity-75"
-                      : "bg-card/70 border-border shadow-sm hover:shadow-md hover:bg-card/90"
+                  className={`rounded-xl border p-4 relative transition-all ${
+                    unlocked
+                      ? "bg-white border-slate-200 shadow-sm hover:shadow-md hover:border-blue-200"
+                      : "bg-slate-100/50 border-slate-200/50 opacity-60"
                   }`}
                 >
                   {f.tier !== "basic" && (
                     <Badge
-                      className={`absolute top-3 right-3 text-[10px] border-0 ${
+                      className={`absolute top-2.5 right-2.5 text-[9px] border-0 ${
                         f.tier === "plus"
-                          ? unlocked ? "bg-violet-500/15 text-violet-600" : "bg-muted text-muted-foreground"
-                          : unlocked ? "bg-amber-500/15 text-amber-600" : "bg-muted text-muted-foreground"
+                          ? unlocked ? "bg-violet-100 text-violet-600" : "bg-slate-200 text-slate-500"
+                          : unlocked ? "bg-blue-100 text-blue-600" : "bg-slate-200 text-slate-500"
                       }`}
                     >
-                      {locked ? <Lock className="w-3 h-3 mr-1" /> : null}
+                      {!unlocked && <Lock className="w-2.5 h-2.5 mr-0.5" />}
                       {f.tier === "plus" ? "PLUS" : "PRO"}
                     </Badge>
                   )}
 
-                  <div className={`p-2 rounded-xl w-fit mb-3 ${locked ? "bg-muted" : "bg-primary/10"}`}>
-                    <f.icon className={`w-5 h-5 ${locked ? "text-muted-foreground" : "text-primary"}`} />
+                  <div className={`p-2 rounded-lg w-fit mb-2 ${
+                    unlocked ? "bg-gradient-to-br from-blue-100 to-cyan-100" : "bg-slate-200"
+                  }`}>
+                    <f.icon className={`w-4 h-4 ${unlocked ? "text-blue-600" : "text-slate-400"}`} />
                   </div>
 
-                  <h3 className={`font-semibold mb-1 ${locked ? "text-muted-foreground" : "text-foreground"}`}>
+                  <h3 className={`text-sm font-semibold mb-1 ${unlocked ? "text-slate-800" : "text-slate-400"}`}>
                     {f.title}
                   </h3>
+                  <p className="text-[11px] text-slate-500 leading-relaxed">{f.description}</p>
 
-                  <p className="text-xs text-muted-foreground leading-relaxed mb-3">
-                    {f.description}
-                  </p>
-
-                  {!isPro && f.tier === "basic" && f.basic && (
-                    <div className="text-[11px] space-y-1">
-                      <div className="flex items-center gap-1.5 text-muted-foreground">
-                        <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/40" />
-                        Basic: {f.basic}
-                      </div>
-                      <div className="flex items-center gap-1.5 text-amber-600">
-                        <Crown className="w-3 h-3" />
-                        Pro: {f.pro}
-                      </div>
-                    </div>
-                  )}
-
-                  {locked && (
+                  {!unlocked && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-xs text-primary p-0 h-auto mt-1"
+                      className="text-[11px] text-blue-500 p-0 h-auto mt-1.5 hover:text-blue-700"
                       onClick={() => navigate("/pricing")}
                     >
                       Upgrade to unlock →
@@ -275,7 +169,7 @@ const Dashboard = () => {
               );
             })}
           </div>
-        </section>
+        </main>
       </div>
     </div>
   );
