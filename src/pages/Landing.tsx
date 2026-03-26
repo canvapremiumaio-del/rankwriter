@@ -8,88 +8,88 @@ const features = [
     icon: Sparkles,
     title: "Smart Blog Writing",
     description: "Create complete, professional blog articles in seconds — natural tone, engaging style.",
-    bg: "bg-[hsl(var(--accent))]",
-    iconColor: "text-[hsl(var(--primary))]",
+    bg: "bg-pink-500/20",
+    iconColor: "text-pink-400",
   },
   {
     icon: Search,
     title: "Primary & Secondary Keywords",
     description: "Target exact keywords with smart placement in titles, headings, and throughout your content.",
-    bg: "bg-violet-50",
-    iconColor: "text-violet-600",
+    bg: "bg-violet-500/20",
+    iconColor: "text-violet-400",
   },
   {
     icon: LayoutList,
     title: "Custom Outline & Structure",
     description: "Provide your own outline with H1/H2/H3 headings — the AI follows it strictly.",
-    bg: "bg-emerald-50",
-    iconColor: "text-emerald-600",
+    bg: "bg-emerald-500/20",
+    iconColor: "text-emerald-400",
   },
   {
     icon: Wand2,
     title: "Content Enhancer",
     description: "One-click rewrite to make any article sound more natural, engaging, and polished.",
-    bg: "bg-pink-50",
-    iconColor: "text-pink-600",
+    bg: "bg-rose-500/20",
+    iconColor: "text-rose-400",
   },
   {
     icon: FileText,
     title: "Save & Reuse Templates",
     description: "Save your writing style, keywords, and instructions as templates for consistent content.",
-    bg: "bg-amber-50",
-    iconColor: "text-amber-600",
+    bg: "bg-amber-500/20",
+    iconColor: "text-amber-400",
   },
   {
     icon: FileDown,
     title: "Export to PDF & Word",
     description: "Download articles as professionally formatted PDF or Word documents, ready to publish.",
-    bg: "bg-sky-50",
-    iconColor: "text-sky-600",
+    bg: "bg-sky-500/20",
+    iconColor: "text-sky-400",
   },
   {
     icon: BarChart3,
     title: "SEO Score Analysis",
     description: "Get AI-powered SEO scoring (0–100) with actionable improvement suggestions for every article.",
-    bg: "bg-violet-50",
-    iconColor: "text-violet-600",
+    bg: "bg-violet-500/20",
+    iconColor: "text-violet-400",
     badge: "PLUS",
   },
   {
     icon: Search,
     title: "AI Keyword Suggestions",
     description: "Auto-generate primary, secondary, and long-tail keywords before writing your article.",
-    bg: "bg-purple-50",
-    iconColor: "text-purple-600",
+    bg: "bg-purple-500/20",
+    iconColor: "text-purple-400",
     badge: "PLUS",
   },
   {
     icon: Layers,
     title: "Multiple Article Variations",
     description: "Generate 2–3 different versions of every article with unique wording and structure.",
-    bg: "bg-fuchsia-50",
-    iconColor: "text-fuchsia-600",
+    bg: "bg-fuchsia-500/20",
+    iconColor: "text-fuchsia-400",
     badge: "PLUS",
   },
   {
     icon: Zap,
     title: "Up to 2,500 Words",
     description: "Create longer, more detailed articles with extended word counts on the Pro plan.",
-    bg: "bg-orange-50",
-    iconColor: "text-orange-600",
+    bg: "bg-orange-500/20",
+    iconColor: "text-orange-400",
   },
   {
     icon: Copy,
     title: "Copy & Share",
     description: "Instantly copy your article to clipboard — paste anywhere, anytime.",
-    bg: "bg-teal-50",
-    iconColor: "text-teal-600",
+    bg: "bg-teal-500/20",
+    iconColor: "text-teal-400",
   },
   {
     icon: Globe,
     title: "Any Topic, Any Niche",
     description: "From tech to travel, finance to food — write about anything with confidence.",
-    bg: "bg-indigo-50",
-    iconColor: "text-indigo-600",
+    bg: "bg-indigo-500/20",
+    iconColor: "text-indigo-400",
   },
 ];
 
@@ -131,7 +131,7 @@ const Landing = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-indigo-950 via-purple-900/20 to-white">
+    <div className="min-h-screen" style={{ background: "linear-gradient(180deg, #0f0a2e 0%, #1a1145 15%, #2d1b69 30%, #4c1d95 45%, #7e22ce 55%, #be185d 70%, #ec4899 82%, #4c1d95 92%, #0f0a2e 100%)" }}>
       {/* Nav */}
       <nav className="bg-white/5 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
@@ -206,12 +206,12 @@ const Landing = () => {
       </section>
 
       {/* Stats */}
-      <section className="py-16 border-y border-white/10 bg-gradient-to-r from-indigo-950/80 via-purple-950/60 to-indigo-950/80 backdrop-blur-sm">
+      <section className="py-16 border-y border-white/10 bg-black/20 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
               <div key={s.label} className="text-center">
-                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-500 to-indigo-600 bg-clip-text text-transparent">
+                <div className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-pink-400 via-fuchsia-400 to-indigo-400 bg-clip-text text-transparent">
                   {s.value}
                 </div>
                 <div className="text-sm text-white/50 mt-1">{s.label}</div>
@@ -247,7 +247,7 @@ const Landing = () => {
                   <f.icon className={`w-6 h-6 ${f.iconColor}`} />
                 </div>
                 {"badge" in f && f.badge && (
-                  <Badge className="bg-violet-100 text-violet-700 border-violet-200 hover:bg-violet-100 text-[10px]">
+                  <Badge className="bg-fuchsia-500/20 text-fuchsia-300 border-fuchsia-400/30 hover:bg-fuchsia-500/20 text-[10px]">
                     {f.badge}
                   </Badge>
                 )}
@@ -322,7 +322,7 @@ const Landing = () => {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-white/10 py-10 bg-indigo-950/50">
+      <footer className="border-t border-white/10 py-10 bg-black/30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-pink-500 to-indigo-600 flex items-center justify-center">
