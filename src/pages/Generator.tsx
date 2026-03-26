@@ -4,7 +4,7 @@ import BlogHeader from "@/components/BlogHeader";
 import BlogInputForm from "@/components/BlogInputForm";
 import BlogOutput from "@/components/BlogOutput";
 import BlogActions from "@/components/BlogActions";
-import NavBar from "@/components/NavBar";
+import DashboardSidebar from "@/components/DashboardSidebar";
 import type { BlogArticle, SeoScore, ArticleVariation } from "@/types/blog";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
@@ -89,44 +89,44 @@ const Generator = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <NavBar />
-      <div className="max-w-3xl mx-auto px-4 pb-20">
-        <BlogHeader />
-        <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} isPro={isPro} isPlus={isPlus} />
+    <div className="flex h-screen overflow-hidden bg-slate-50">
+      <DashboardSidebar />
+      <div className="flex-1 flex flex-col overflow-auto">
+        <div className="max-w-3xl mx-auto px-6 py-8 w-full">
+          <BlogHeader />
+          <BlogInputForm onGenerate={handleGenerate} isLoading={isLoading} isPro={isPro} isPlus={isPlus} />
 
-        {article && (
-          <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <BlogOutput article={article} onArticleChange={setArticle} editable isPro={isPro} />
-            
-            {/* SEO Score - Plus only */}
-            <SeoScoreCard
-              article={article}
-              isPlus={isPlus}
-              seoScore={seoScore}
-              onSeoScoreChange={setSeoScore}
-              primaryKeyword={lastGenParams.primaryKeyword}
-              secondaryKeywords={lastGenParams.secondaryKeywords}
-            />
+          {article && (
+            <div className="mt-10 space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <BlogOutput article={article} onArticleChange={setArticle} editable isPro={isPro} />
+              
+              <SeoScoreCard
+                article={article}
+                isPlus={isPlus}
+                seoScore={seoScore}
+                onSeoScoreChange={setSeoScore}
+                primaryKeyword={lastGenParams.primaryKeyword}
+                secondaryKeywords={lastGenParams.secondaryKeywords}
+              />
 
-            <BlogActions
-              article={article}
-              isPro={isPro}
-              isPlus={isPlus}
-              onArticleChange={setArticle}
-              topic={lastGenParams.topic}
-              primaryKeyword={lastGenParams.primaryKeyword}
-              secondaryKeywords={lastGenParams.secondaryKeywords}
-              variations={variations}
-              onVariationsChange={setVariations}
-            />
+              <BlogActions
+                article={article}
+                isPro={isPro}
+                isPlus={isPlus}
+                onArticleChange={setArticle}
+                topic={lastGenParams.topic}
+                primaryKeyword={lastGenParams.primaryKeyword}
+                secondaryKeywords={lastGenParams.secondaryKeywords}
+                variations={variations}
+                onVariationsChange={setVariations}
+              />
 
-            {/* Variations - Plus only */}
-            {variations.length > 0 && (
-              <ArticleVariations variations={variations} />
-            )}
-          </div>
-        )}
+              {variations.length > 0 && (
+                <ArticleVariations variations={variations} />
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

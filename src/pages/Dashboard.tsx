@@ -103,16 +103,16 @@ const Dashboard = () => {
         <main className="flex-1 p-6 overflow-auto">
           {/* Stats cards */}
           <div className="grid grid-cols-3 gap-4 mb-6">
-            <div className="rounded-2xl p-5 bg-gradient-to-br from-blue-500 to-blue-700 text-white shadow-lg shadow-blue-500/20">
-              <p className="text-blue-100 text-xs font-medium mb-1">Current Plan</p>
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-pink-500 to-rose-600 text-white shadow-lg shadow-pink-500/20">
+              <p className="text-pink-100 text-xs font-medium mb-1">Current Plan</p>
               <p className="text-2xl font-bold">{isPlus ? "💎 Plus" : isPro ? "⭐ Pro" : "Basic"}</p>
             </div>
-            <div className="rounded-2xl p-5 bg-gradient-to-br from-cyan-400 to-blue-500 text-white shadow-lg shadow-cyan-500/20">
-              <p className="text-cyan-100 text-xs font-medium mb-1">Features Available</p>
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-fuchsia-500 to-purple-600 text-white shadow-lg shadow-fuchsia-500/20">
+              <p className="text-fuchsia-100 text-xs font-medium mb-1">Features Available</p>
               <p className="text-2xl font-bold">{features.filter(f => isFeatureUnlocked(f.tier)).length}/{features.length}</p>
             </div>
-            <div className="rounded-2xl p-5 bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg shadow-indigo-500/20">
-              <p className="text-indigo-100 text-xs font-medium mb-1">Plan Status</p>
+            <div className="rounded-2xl p-5 bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-lg shadow-purple-500/20">
+              <p className="text-purple-100 text-xs font-medium mb-1">Plan Status</p>
               <p className="text-2xl font-bold">{expiryInfo ? expiryInfo.label : "Active"}</p>
             </div>
           </div>

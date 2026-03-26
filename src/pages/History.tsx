@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Trash2, ArrowLeft, Loader2, ExternalLink, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import type { BlogArticle } from "@/types/blog";
-import NavBar from "@/components/NavBar";
+import DashboardSidebar from "@/components/DashboardSidebar";
 
 interface SavedArticle {
   id: string;
@@ -86,7 +86,6 @@ const History = () => {
         });
       }
 
-      // Refresh the list
       const { data: refreshed } = await supabase
         .from("articles")
         .select("*")
@@ -110,75 +109,62 @@ const History = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <NavBar />
-      <div className="max-w-3xl mx-auto px-4 pb-20 pt-4">
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">Article History</h2>
+    <div className="flex h-screen overflow-hidden bg-slate-50">
+      <DashboardSidebar />
+      <div className="flex-1 flex flex-col overflow-hidden">
+        <header className="h-16 flex items-center px-8 border-b border-slate-200 bg-white/80 backdrop-blur-sm shrink-0">
+          <h1 className="text-xl font-bold text-slate-800 font-display">Article History</h1>
+        </header>
 
-        {articles.length === 0 ? (
-          <div className="text-center py-16 text-muted-foreground">
-            <p className="text-lg">No articles yet.</p>
-            <Button variant="outline" className="mt-4" onClick={() => navigate("/generate")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Generate your first article
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {articles.map((a) => (
-              <div
-                key={a.id}
-                className="bg-card rounded-2xl border border-border p-5 hover:shadow-md transition-shadow"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3
-                      className="font-semibold text-foreground truncate cursor-pointer hover:text-primary transition-colors"
-                      onClick={() => navigate(`/article/${a.id}`)}
-                    >
-                      {a.title}
-                    </h3>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      <Badge variant="secondary" className="text-xs">{a.tone}</Badge>
-                      <Badge variant="secondary" className="text-xs">{a.word_count} words</Badge>
-                      <span className="text-xs text-muted-foreground">
-                        {new Date(a.created_at).toLocaleDateString()}
-                      </span>
+        <main className="flex-1 p-6 overflow-auto">
+          {articles.length === 0 ? (
+            <div className="text-center py-16 text-slate-500">
+              <p className="text-lg">No articles yet.</p>
+              <Button variant="outline" className="mt-4" onClick={() => navigate("/generate")}>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Generate your first article
+              </Button>
+            </div>
+          ) : (
+            <div className="space-y-3 max-w-3xl">
+              {articles.map((a) => (
+                <div
+                  key={a.id}
+                  className="bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="min-w-0 flex-1">
+                      <h3
+                        className="font-semibold text-slate-800 truncate cursor-pointer hover:text-pink-600 transition-colors"
+                        onClick={() => navigate(`/article/${a.id}`)}
+                      >
+                        {a.title}
+                      </h3>
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        <Badge variant="secondary" className="text-xs">{a.tone}</Badge>
+                        <Badge variant="secondary" className="text-xs">{a.word_count} words</Badge>
+                        <span className="text-xs text-slate-400">
+                          {new Date(a.created_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1 shrink-0">
+                      <Button variant="ghost" size="icon" onClick={() => navigate(`/article/${a.id}`)} title="View article">
+                        <ExternalLink className="w-4 h-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleRegenerate(a)} disabled={regeneratingId === a.id} title="Regenerate">
+                        <RefreshCw className={`w-4 h-4 ${regeneratingId === a.id ? "animate-spin" : ""}`} />
+                      </Button>
+                      <Button variant="ghost" size="icon" onClick={() => handleDelete(a.id)} title="Delete" className="text-destructive hover:text-destructive">
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => navigate(`/article/${a.id}`)}
-                      title="View article"
-                    >
-                      <ExternalLink className="w-4 h-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleRegenerate(a)}
-                      disabled={regeneratingId === a.id}
-                      title="Regenerate"
-                    >
-                      <RefreshCw className={`w-4 h-4 ${regeneratingId === a.id ? "animate-spin" : ""}`} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleDelete(a.id)}
-                      title="Delete"
-                      className="text-destructive hover:text-destructive"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </Button>
-                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </main>
       </div>
     </div>
   );
