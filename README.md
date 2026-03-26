@@ -1,3 +1,4 @@
+<img width="1536" height="1024" alt="ChatGPT Image Mar 26, 2026, 04_16_51 PM" src="https://github.com/user-attachments/assets/27294fc5-05f7-42e3-97c1-0ecc1ae10754" />
 # 👋 Hi, I'm a SaaS & AI Automation Builder
 
 🚀 I build AI-powered tools, automation systems, and SaaS products that help businesses grow faster.
@@ -61,4 +62,5 @@ I am actively building tools that combine:
 
 ## ⭐ Goal
 Building scalable AI products and helping businesses automate & grow.
+
 
