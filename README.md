@@ -17,7 +17,7 @@
 ### 📝 Rank Writer (AI SEO Tool)
 AI-powered platform to generate SEO-optimized blog articles instantly.
 
-👉 Live: https://preview--rankwriter.lovable.app  
+👉 Live: https://rankwriter.lovable.app  
 👉 Features:
 - Word count control  
 - Keyword optimization  
