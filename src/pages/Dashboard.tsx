@@ -6,9 +6,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
   Sparkles, FileDown, LayoutList, ArrowRight, Loader2, Lock, Crown, Zap,
-  Search, FileText, Wand2, Copy, Globe, BarChart3, Layers,
+  Search, FileText, Wand2, Copy, Globe, BarChart3, Layers, Eye,
 } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { differenceInDays, differenceInHours, differenceInMinutes, format } from "date-fns";
 
 const features = [
@@ -26,10 +26,17 @@ const features = [
   { icon: Layers, title: "Multiple Variations", description: "Generate 2–3 different versions of every article.", tier: "plus" },
 ];
 
+const exampleOutput = {
+  title: "10 Proven Strategies to Boost Your Website Traffic in 2025",
+  intro: "Driving consistent traffic to your website requires a strategic blend of SEO, content marketing, and social media outreach...",
+  headings: ["H2: Optimize for Search Engines", "H2: Leverage Social Media Platforms", "H3: Build an Email Marketing Funnel"],
+};
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const { plan, isPro, isPlus, loading: planLoading, expiresAt } = useUserPlan();
+  const [showPreview, setShowPreview] = useState(false);
 
   const expiryInfo = useMemo(() => {
     if (!expiresAt || (!isPro && !isPlus)) return null;
@@ -69,37 +76,28 @@ const Dashboard = () => {
     <div className="flex h-screen overflow-hidden bg-slate-50">
       <DashboardSidebar />
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Top bar */}
         <header className="h-16 flex items-center justify-between px-8 border-b border-slate-200 bg-white/80 backdrop-blur-sm shrink-0">
           <div>
-            <h1 className="text-xl font-bold text-slate-800 font-display">
-              Welcome back 👋
-            </h1>
+            <h1 className="text-xl font-bold text-slate-800 font-display">Welcome back 👋</h1>
             <p className="text-xs text-slate-500">Ready to create amazing content?</p>
           </div>
           <div className="flex items-center gap-3">
             {expiryInfo && (
-              <Badge className="bg-orange-100 text-orange-700 border border-orange-200 text-[10px]">
-                ⏳ {expiryInfo.label}
-              </Badge>
+              <Badge className="bg-orange-100 text-orange-700 border border-orange-200 text-[10px]">⏳ {expiryInfo.label}</Badge>
             )}
             <Button size="sm" onClick={() => navigate("/generate")} className="gap-2 bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-700 hover:to-cyan-600 text-white border-0">
-              <Sparkles className="w-4 h-4" />
-              Start Writing
-              <ArrowRight className="w-3 h-3" />
+              <Sparkles className="w-4 h-4" /> Start Writing <ArrowRight className="w-3 h-3" />
             </Button>
             {!isPlus && (
               <Button size="sm" variant="outline" onClick={() => navigate("/pricing")} className="gap-2 border-blue-200 text-blue-600 hover:bg-blue-50">
-                <Crown className="w-4 h-4" />
-                {isPro ? "Upgrade to Plus" : "Upgrade Plan"}
+                <Crown className="w-4 h-4" /> {isPro ? "Upgrade to Plus" : "Upgrade Plan"}
               </Button>
             )}
           </div>
         </header>
 
-        {/* Content area - no scroll */}
         <main className="flex-1 p-6 overflow-auto">
           {/* Stats cards */}
           <div className="grid grid-cols-3 gap-4 mb-6">
@@ -115,6 +113,28 @@ const Dashboard = () => {
               <p className="text-purple-100 text-xs font-medium mb-1">Plan Status</p>
               <p className="text-2xl font-bold">{expiryInfo ? expiryInfo.label : "Active"}</p>
             </div>
+          </div>
+
+          {/* Example Output Preview */}
+          <div className="mb-6">
+            <Button variant="outline" size="sm" onClick={() => setShowPreview(!showPreview)} className="gap-2 mb-3 text-xs">
+              <Eye className="w-3.5 h-3.5" /> {showPreview ? "Hide" : "Show"} Example Output
+            </Button>
+            {showPreview && (
+              <div className="bg-white rounded-xl border border-slate-200 p-5 animate-in fade-in slide-in-from-top-2 duration-300">
+                <Badge className="mb-3 bg-emerald-100 text-emerald-700 border-emerald-200 text-[10px]">Example Output</Badge>
+                <h3 className="text-base font-bold text-slate-800 mb-2">{exampleOutput.title}</h3>
+                <p className="text-sm text-slate-500 mb-3">{exampleOutput.intro}</p>
+                <div className="space-y-1.5">
+                  {exampleOutput.headings.map((h) => (
+                    <div key={h} className="flex items-center gap-2 text-xs">
+                      <div className="w-1.5 h-1.5 rounded-full bg-pink-500" />
+                      <span className="text-slate-600 font-medium">{h}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           {/* Features grid */}
@@ -143,25 +163,13 @@ const Dashboard = () => {
                       {f.tier === "plus" ? "PLUS" : "PRO"}
                     </Badge>
                   )}
-
-                  <div className={`p-2 rounded-lg w-fit mb-2 ${
-                    unlocked ? "bg-gradient-to-br from-blue-100 to-cyan-100" : "bg-slate-200"
-                  }`}>
+                  <div className={`p-2 rounded-lg w-fit mb-2 ${unlocked ? "bg-gradient-to-br from-blue-100 to-cyan-100" : "bg-slate-200"}`}>
                     <f.icon className={`w-4 h-4 ${unlocked ? "text-blue-600" : "text-slate-400"}`} />
                   </div>
-
-                  <h3 className={`text-sm font-semibold mb-1 ${unlocked ? "text-slate-800" : "text-slate-400"}`}>
-                    {f.title}
-                  </h3>
+                  <h3 className={`text-sm font-semibold mb-1 ${unlocked ? "text-slate-800" : "text-slate-400"}`}>{f.title}</h3>
                   <p className="text-[11px] text-slate-500 leading-relaxed">{f.description}</p>
-
                   {!unlocked && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-[11px] text-blue-500 p-0 h-auto mt-1.5 hover:text-blue-700"
-                      onClick={() => navigate("/pricing")}
-                    >
+                    <Button variant="ghost" size="sm" className="text-[11px] text-blue-500 p-0 h-auto mt-1.5 hover:text-blue-700" onClick={() => navigate("/pricing")}>
                       Upgrade to unlock →
                     </Button>
                   )}

@@ -6,15 +6,11 @@ import DashboardSidebar from "@/components/DashboardSidebar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { Check, X, Loader2, MessageCircle, Tag } from "lucide-react";
+import { Check, X, Loader2, MessageCircle, Tag, Crown, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useEffect, useState } from "react";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription,
 } from "@/components/ui/dialog";
 
 const plans = [
@@ -46,20 +42,21 @@ const plans = [
     price: "$10",
     description: "Full SEO toolkit for professional content creators.",
     features: [
-      { text: "AI blog generation", included: true },
-      { text: "Advanced human-like writing", included: true },
-      { text: "Copy article to clipboard", included: true },
-      { text: "Primary & secondary keyword targeting", included: true },
-      { text: "SEO keywords & meta description", included: true },
-      { text: "Advanced H1/H2/H3 structure", included: true },
-      { text: "Custom outline & instructions", included: true },
+      { text: "Everything in Basic", included: true, bold: true },
+      { text: "Advanced writing quality", included: true },
+      { text: "Primary + secondary keywords", included: true },
+      { text: "SEO meta description", included: true },
+      { text: "H1/H2/H3 structure", included: true },
+      { text: "Custom outline", included: true },
       { text: "Save & reuse templates", included: true },
       { text: "Up to 2,500 words", included: true },
-      { text: "Humanize article (AI rewrite)", included: true },
+      { text: "AI rewrite (humanize)", included: true },
       { text: "Export to PDF & Word", included: true },
       { text: "SEO Score analysis", included: false },
       { text: "Keyword suggestions", included: false },
       { text: "Multiple article variations", included: false },
+      { text: "Templates system (5 types)", included: false },
+      { text: "Simple/Advanced mode", included: false },
     ],
   },
   {
@@ -67,20 +64,20 @@ const plans = [
     name: "Plus",
     price: "$15",
     recommended: true,
-    description: "Advanced SEO + AI features for power users.",
+    description: "Full AI writing system with all advanced features. Best for freelancers & agencies.",
     features: [
-      { text: "Everything in Pro", included: true },
+      { text: "Everything in Pro", included: true, bold: true },
       { text: "SEO Score (content grading 0–100)", included: true },
       { text: "AI Keyword Suggestions", included: true },
       { text: "Multiple article variations (2–3)", included: true },
-      { text: "Primary & secondary keywords", included: true },
-      { text: "Custom outline & instructions", included: true },
-      { text: "Save & reuse templates", included: true },
+      { text: "Templates system (Blog, Ads, Email, Product, LinkedIn)", included: true },
+      { text: "Simple/Advanced mode toggle", included: true },
+      { text: "Result preview section", included: true },
+      { text: "Optimized prompt system (better quality)", included: true },
+      { text: "Priority output quality", included: true },
       { text: "Up to 2,500 words", included: true },
       { text: "Humanize article (AI rewrite)", included: true },
       { text: "Export to PDF & Word", included: true },
-      { text: "Advanced H1/H2/H3 structure", included: true },
-      { text: "Priority quality output", included: true },
     ],
   },
 ];
@@ -110,9 +107,7 @@ const Pricing = () => {
     if (!coupon.trim()) return;
     setRedeeming(true);
     try {
-      const { data, error } = await supabase.functions.invoke("redeem-coupon", {
-        body: { code: coupon.trim() },
-      });
+      const { data, error } = await supabase.functions.invoke("redeem-coupon", { body: { code: coupon.trim() } });
       if (error || data?.error) {
         toast({ title: "Error", description: data?.error || "Failed to redeem coupon", variant: "destructive" });
       } else {
@@ -147,7 +142,7 @@ const Pricing = () => {
         </header>
 
         <main className="flex-1 p-6 overflow-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-5xl mx-auto">
             {plans.map((p) => {
               const isActive = currentPlan === p.id;
               return (
@@ -155,21 +150,24 @@ const Pricing = () => {
                   key={p.id}
                   className={`bg-white rounded-2xl border-2 p-5 relative transition-shadow ${
                     p.recommended
-                      ? "border-pink-500 shadow-lg shadow-pink-500/10"
+                      ? "border-pink-500 shadow-xl shadow-pink-500/15 scale-[1.02]"
                       : "border-slate-200 shadow-sm"
                   }`}
                 >
                   {p.recommended && (
-                    <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-3 border-0">
-                      Best Value
-                    </Badge>
+                    <>
+                      <Badge className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-pink-500 to-purple-600 text-white px-4 border-0 gap-1">
+                        <Sparkles className="w-3 h-3" /> Most Popular
+                      </Badge>
+                    </>
                   )}
                   {isActive && (
-                    <Badge className="absolute -top-3 right-4 bg-emerald-500 text-white px-3 border-0">
-                      Active
-                    </Badge>
+                    <Badge className="absolute -top-3 right-4 bg-emerald-500 text-white px-3 border-0">Active</Badge>
                   )}
-                  <h2 className="text-lg font-bold text-slate-800 mb-1">{p.name}</h2>
+                  <h2 className="text-lg font-bold text-slate-800 mb-1 flex items-center gap-2">
+                    {p.name}
+                    {p.recommended && <Crown className="w-4 h-4 text-pink-500" />}
+                  </h2>
                   <p className="text-xs text-slate-500 mb-3">{p.description}</p>
                   <div className="flex items-baseline gap-1 mb-4">
                     <span className="text-3xl font-bold text-slate-800">{p.price}</span>
@@ -184,7 +182,7 @@ const Pricing = () => {
                         ) : (
                           <X className="w-3.5 h-3.5 text-slate-300 shrink-0" />
                         )}
-                        <span className={f.included ? "text-slate-700" : "text-slate-400"}>
+                        <span className={`${f.included ? "text-slate-700" : "text-slate-400"} ${"bold" in f && f.bold ? "font-semibold" : ""}`}>
                           {f.text}
                         </span>
                       </li>
@@ -220,44 +218,28 @@ const Pricing = () => {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Activate {selectedPlan === "plus" ? "Plus" : selectedPlan === "pro" ? "Pro" : "Basic"} Plan</DialogTitle>
-            <DialogDescription>
-              Enter a coupon code to activate this plan, or contact the admin to get one.
-            </DialogDescription>
+            <DialogDescription>Enter a coupon code to activate this plan, or contact the admin to get one.</DialogDescription>
           </DialogHeader>
-
           <div className="space-y-4 pt-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground flex items-center gap-2">
-                <Tag className="w-4 h-4" />
-                Coupon Code
-              </label>
+              <label className="text-sm font-medium text-foreground flex items-center gap-2"><Tag className="w-4 h-4" /> Coupon Code</label>
               <div className="flex gap-2">
-                <Input
-                  placeholder="Enter coupon code..."
-                  value={coupon}
-                  onChange={(e) => setCoupon(e.target.value)}
-                  className="flex-1"
-                />
+                <Input placeholder="Enter coupon code..." value={coupon} onChange={(e) => setCoupon(e.target.value)} className="flex-1" />
                 <Button onClick={handleCouponSubmit} disabled={!coupon.trim() || redeeming}>
                   {redeeming ? <Loader2 className="w-4 h-4 animate-spin" /> : "Apply"}
                 </Button>
               </div>
             </div>
-
             <div className="flex items-center gap-3">
               <div className="h-px flex-1 bg-border" />
               <span className="text-xs text-muted-foreground">OR</span>
               <div className="h-px flex-1 bg-border" />
             </div>
-
             <div className="bg-muted/50 rounded-lg p-4 text-center">
-              <p className="text-sm text-muted-foreground mb-2">
-                Don't have a coupon? Contact us on WhatsApp.
-              </p>
+              <p className="text-sm text-muted-foreground mb-2">Don't have a coupon? Contact us on WhatsApp.</p>
               <Button variant="outline" asChild>
                 <a href="https://wa.me/923059694651" target="_blank" rel="noopener noreferrer" className="gap-2">
-                  <MessageCircle className="w-4 h-4" />
-                  WhatsApp: +92 305 9694651
+                  <MessageCircle className="w-4 h-4" /> WhatsApp: +92 305 9694651
                 </a>
               </Button>
             </div>
