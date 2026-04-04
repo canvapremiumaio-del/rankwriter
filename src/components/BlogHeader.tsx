@@ -11,8 +11,11 @@ const BlogHeader = () => {
           Rank Writer
         </h1>
       </div>
-      <p className="text-muted-foreground text-lg max-w-md mx-auto">
-        Create SEO-optimized blog articles instantly
+      <p className="text-muted-foreground text-lg max-w-md mx-auto font-semibold">
+        Claude-Level AI Writing System
+      </p>
+      <p className="text-muted-foreground text-sm max-w-md mx-auto mt-1">
+        Generate high-quality content in seconds (no manual writing)
       </p>
     </header>
   );
